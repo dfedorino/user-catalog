@@ -1,4 +1,4 @@
-package com.dfedorino.user_catalog.model;
+package com.dfedorino.user_catalog.presentation.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.dfedorino.user_catalog.model;
+package com.dfedorino.user_catalog.presentation.model;
 
 
 import org.junit.jupiter.api.Test;
