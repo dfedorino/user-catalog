@@ -6,10 +6,12 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.persistence.Entity;
 import java.time.LocalDate;
 
 @AllArgsConstructor
 @Data
+@Entity
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @ToString
