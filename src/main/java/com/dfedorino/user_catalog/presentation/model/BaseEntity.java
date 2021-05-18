@@ -3,13 +3,13 @@ package com.dfedorino.user_catalog.presentation.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
-@Entity                 // JPA annotation to make this object ready for storage in a JPA-based data store
 @Getter
 @EqualsAndHashCode
+@MappedSuperclass
 // Choose your inheritance strategy:
 //@Inheritance(strategy=InheritanceType.JOINED)
 //@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
