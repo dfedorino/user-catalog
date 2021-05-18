@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS users (
     date_of_birth DATE NOT NULL,
     address VARCHAR(250) NOT NULL,
     phone_number VARCHAR(250) NOT NULL
-)
+);
