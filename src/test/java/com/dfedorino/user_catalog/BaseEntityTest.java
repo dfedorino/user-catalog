@@ -11,4 +11,12 @@ public class BaseEntityTest {
         BaseEntity userEntity = new User();
         assertThat(userEntity.getId()).isNull();
     }
+
+    @Test
+    public void testEquals_IdIsNull_AreEqual() {
+        BaseEntity firstUserEntity = new User();
+        BaseEntity secondUserEntity = new User();
+        assertThat(firstUserEntity).isEqualTo(secondUserEntity);
+        assertThat(firstUserEntity.hashCode()).isEqualTo(secondUserEntity.hashCode());
+    }
 }
