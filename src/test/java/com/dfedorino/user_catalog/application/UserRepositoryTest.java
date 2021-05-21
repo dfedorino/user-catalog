@@ -5,16 +5,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserRepositoryTest {
+    @Autowired
+    private TestEntityManager entityManager;
     @Autowired
     private UserRepository repository;
 
@@ -24,23 +26,23 @@ class UserRepositoryTest {
         User josh = new User("Josh", "Bloch", LocalDate.of(1970, Month.JANUARY, 2), "Other Address", "Other Number");
 
         // create
-        repository.save(james);
-        repository.save(josh);
-        assertThat(repository.getOne(1L)).isEqualTo(james);
-        assertThat(repository.getOne(2L)).isEqualTo(josh);
+        entityManager.persist(james);
+        entityManager.persist(josh);
+        assertThat(repository.findByFamilyName("Gosling")).isEqualTo(james);
+        assertThat(repository.findByFamilyName("Bloch")).isEqualTo(josh);
 
         // update
-        User updatedJames = repository.getOne(1L);
+        User updatedJames = repository.findByFamilyName("Gosling");
         updatedJames.setAddress("New Address");
         repository.save(updatedJames);
-        updatedJames = repository.getOne(1L);
+        updatedJames = repository.findByFamilyName("Gosling");
         assertThat(updatedJames.getAddress()).isEqualTo("New Address");
-        assertThat(repository.getOne(2L)).isEqualTo(josh);
+        assertThat(repository.findByFamilyName("Bloch")).isEqualTo(josh);
 
         // delete
-        repository.deleteById(1L);
-        Optional<User> deletedJames = repository.findById(1L);
-        assertThat(deletedJames).isEmpty();
-        assertThat(repository.getOne(2L)).isEqualTo(josh);
+        repository.deleteByFamilyName("Gosling");
+        User deletedJames = repository.findByFamilyName("Gosling");
+        assertThat(deletedJames).isNull();
+        assertThat(repository.findByFamilyName("Bloch")).isEqualTo(josh);
     }
 }
