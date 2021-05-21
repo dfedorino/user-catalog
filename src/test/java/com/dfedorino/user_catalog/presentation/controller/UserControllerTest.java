@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -35,5 +36,20 @@ class UserControllerTest {
         this.mockMvc.perform(postRequest)
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetOne_GetExistingUserFromFilledDatabase_ShouldReturnExistingUser() throws Exception {
+        this.mockMvc.perform(get("/users/3"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetOne_GetNonExistingUserFromFilledDatabase_ShouldThrowException() throws Exception {
+        this.mockMvc.perform(get("/users/999"))
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string("Could not find user 999"));
     }
 }

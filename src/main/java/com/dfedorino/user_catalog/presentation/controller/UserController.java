@@ -2,7 +2,9 @@ package com.dfedorino.user_catalog.presentation.controller;
 
 import com.dfedorino.user_catalog.application.UserRepository;
 import com.dfedorino.user_catalog.presentation.model.User;
+import com.dfedorino.user_catalog.presentation.model.exception.UserNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,5 +30,11 @@ public class UserController {
     @PostMapping("/users")
     User newUser(@RequestBody User newUser) {
         return repository.save(newUser);
+    }
+
+    @GetMapping("/users/{id}")
+    User readUser(@PathVariable Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
     }
 }
