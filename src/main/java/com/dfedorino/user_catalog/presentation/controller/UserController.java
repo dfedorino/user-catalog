@@ -3,6 +3,7 @@ package com.dfedorino.user_catalog.presentation.controller;
 import com.dfedorino.user_catalog.application.UserRepository;
 import com.dfedorino.user_catalog.presentation.model.User;
 import com.dfedorino.user_catalog.presentation.model.exception.UserNotFoundException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,5 +52,10 @@ public class UserController {
                     return repository.save(user);
                 })
                 .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    @DeleteMapping("/users/{id}")
+    void deleteUser(@PathVariable Long id) {
+        repository.deleteById(id);
     }
 }

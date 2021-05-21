@@ -45,34 +45,11 @@ class UserControllerTest {
     }
 
     @Test
-    void testGetOne_GetExistingUserFromFilledDatabase_ShouldReturnExistingUser() throws Exception {
-        this.mockMvc.perform(get("/users/3"))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
-
-    @Test
     void testGetOne_GetNonExistingUserFromFilledDatabase_ShouldThrowException() throws Exception {
         this.mockMvc.perform(get("/users/999"))
                 .andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string("Could not find user 999"));
-    }
-
-    @Test
-    void testPutOne_UpdateExistingUserFromFilledDatabase_ShouldReturnUpdatedUser() throws Exception {
-        String user3Json = "{" +
-                "\"firstName\":\"first name 3\"," +
-                "\"familyName\":\"family name 3\"," +
-                "\"dateOfBirth\":\"1970-01-03\"," +
-                "\"address\":\"new address 3\"," +
-                "\"phoneNumber\":\"number 3\"}";
-        RequestBuilder putRequest = put("/users/3")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(user3Json);
-        this.mockMvc.perform(putRequest)
-                .andDo(print())
-                .andExpect(status().isOk());
     }
 
     @Test
