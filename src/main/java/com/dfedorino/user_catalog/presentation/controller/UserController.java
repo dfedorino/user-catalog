@@ -3,6 +3,8 @@ package com.dfedorino.user_catalog.presentation.controller;
 import com.dfedorino.user_catalog.application.UserRepository;
 import com.dfedorino.user_catalog.presentation.model.User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -21,5 +23,10 @@ public class UserController {
         List<User> all = new ArrayList<>();
         repository.findAll().forEach(all::add);
         return all;
+    }
+
+    @PostMapping("/users")
+    User newUser(@RequestBody User newUser) {
+        return repository.save(newUser);
     }
 }
