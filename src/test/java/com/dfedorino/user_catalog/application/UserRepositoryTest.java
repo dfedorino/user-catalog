@@ -3,7 +3,6 @@ package com.dfedorino.user_catalog.application;
 import com.dfedorino.user_catalog.presentation.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
@@ -13,7 +12,6 @@ import java.time.Month;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
@@ -21,7 +19,7 @@ class UserRepositoryTest {
     private UserRepository repository;
 
     @Test
-    public void testCrudOperations_EmptyDb() {
+    public void testCrudOperations() {
         User james = new User("James", "Gosling", LocalDate.of(1970, Month.JANUARY, 1), "Address", "Number");
         User josh = new User("Josh", "Bloch", LocalDate.of(1970, Month.JANUARY, 2), "Other Address", "Other Number");
 
