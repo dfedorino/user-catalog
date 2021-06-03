@@ -8,14 +8,14 @@ public class BaseEntityTest {
 
     @Test
     public void testGetId() {
-        BaseEntity userEntity = new User();
+        BaseEntity userEntity = new UserBuilder().build();
         assertThat(userEntity.getId()).isNull();
     }
 
     @Test
     public void testEquals_IdIsNull_AreEqual() {
-        BaseEntity firstUserEntity = new User();
-        BaseEntity secondUserEntity = new User();
+        BaseEntity firstUserEntity = new UserBuilder().build();
+        BaseEntity secondUserEntity = new UserBuilder().build();
         assertThat(firstUserEntity).isEqualTo(secondUserEntity);
         assertThat(firstUserEntity.hashCode()).isEqualTo(secondUserEntity.hashCode());
     }

@@ -4,6 +4,6 @@ import com.dfedorino.user_catalog.presentation.model.User;
 import org.springframework.data.repository.CrudRepository;
 
 public interface UserRepository extends CrudRepository<User, Long> {
-    User findByFamilyName(String familyName);
-    void deleteByFamilyName(String familyName);
+    User findByLogin(String login);
+    void deleteByLogin(String login);
 }

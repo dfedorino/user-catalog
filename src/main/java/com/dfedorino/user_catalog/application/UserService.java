@@ -11,7 +11,7 @@ import java.util.Optional;
 public class UserService {
     UserRepository repository;
 
-    UserService (UserRepository repository) {
+    UserService(UserRepository repository) {
         this.repository = repository;
     }
 
@@ -29,6 +29,10 @@ public class UserService {
         return repository.findById(id);
     }
 
+    public User getUserByLogin(String login) {
+        return repository.findByLogin(login);
+    }
+
     public Optional<User> updateUserById(Long id, User newUser) {
         return repository.findById(id)
                 .map(user -> repository.save(getUpdatedUser(user, newUser)));
@@ -39,11 +43,9 @@ public class UserService {
     }
 
     private User getUpdatedUser(User user, User newUser) {
-        user.setFirstName(newUser.getFirstName());
-        user.setFamilyName(newUser.getFamilyName());
-        user.setDateOfBirth(newUser.getDateOfBirth());
-        user.setAddress(newUser.getAddress());
-        user.setPhoneNumber(newUser.getPhoneNumber());
+        user.setLogin(newUser.getLogin());
+        user.setPassword(newUser.getPassword());
+        user.setEmail(newUser.getEmail());
         return user;
     }
 

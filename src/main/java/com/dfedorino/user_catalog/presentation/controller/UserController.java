@@ -21,6 +21,11 @@ public class UserController {
         this.service = service;
     }
 
+    @GetMapping("/login")
+    String login() {
+        return "You must login first!";
+    }
+
     @GetMapping("/users")
     List<User> all() {
         return service.getAllUsers();
@@ -31,9 +36,13 @@ public class UserController {
         return service.createNewUser(newUser);
     }
 
-    @GetMapping("/users/{id}")
-    User readUser(@PathVariable Long id) {
-        return service.getUserById(id).orElseThrow(() -> new UserNotFoundException(id));
+    @GetMapping("/users/{login}")
+    User readUser(@PathVariable String login) {
+        User found = service.getUserByLogin(login);
+        if (found == null) {
+            throw new UserNotFoundException(login);
+        }
+        return found;
     }
 
     @PutMapping("/users/{id}")

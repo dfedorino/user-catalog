@@ -1,13 +1,11 @@
 package com.dfedorino.user_catalog.application;
 
 import com.dfedorino.user_catalog.presentation.model.User;
+import com.dfedorino.user_catalog.presentation.model.UserBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-
-import java.time.LocalDate;
-import java.time.Month;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,27 +18,27 @@ class UserRepositoryTest {
 
     @Test
     public void testCrudOperations() {
-        User james = new User("James", "Gosling", LocalDate.of(1970, Month.JANUARY, 1), "Address", "Number");
-        User josh = new User("Josh", "Bloch", LocalDate.of(1970, Month.JANUARY, 2), "Other Address", "Other Number");
+        User james = new UserBuilder().login("James").password("pass1").email("james@test.com").build();
+        User josh = new UserBuilder().login("Josh").password("pass2").email("josh@test.com").build();
 
         // create
         entityManager.persist(james);
         entityManager.persist(josh);
-        assertThat(repository.findByFamilyName("Gosling")).isEqualTo(james);
-        assertThat(repository.findByFamilyName("Bloch")).isEqualTo(josh);
+        assertThat(repository.findByLogin("James")).isEqualTo(james);
+        assertThat(repository.findByLogin("Josh")).isEqualTo(josh);
 
         // update
-        User updatedJames = repository.findByFamilyName("Gosling");
-        updatedJames.setAddress("New Address");
+        User updatedJames = repository.findByLogin("James");
+        updatedJames.setPassword("newPass");
         repository.save(updatedJames);
-        updatedJames = repository.findByFamilyName("Gosling");
-        assertThat(updatedJames.getAddress()).isEqualTo("New Address");
-        assertThat(repository.findByFamilyName("Bloch")).isEqualTo(josh);
+        updatedJames = repository.findByLogin("James");
+        assertThat(updatedJames.getPassword()).isEqualTo("newPass");
+        assertThat(repository.findByLogin("Josh")).isEqualTo(josh);
 
         // delete
-        repository.deleteByFamilyName("Gosling");
-        User deletedJames = repository.findByFamilyName("Gosling");
+        repository.deleteByLogin("James");
+        User deletedJames = repository.findByLogin("James");
         assertThat(deletedJames).isNull();
-        assertThat(repository.findByFamilyName("Bloch")).isEqualTo(josh);
+        assertThat(repository.findByLogin("Josh")).isEqualTo(josh);
     }
 }

@@ -2,10 +2,8 @@ package com.dfedorino.user_catalog.presentation.controller;
 
 import com.dfedorino.user_catalog.application.UserService;
 import com.dfedorino.user_catalog.presentation.model.User;
+import com.dfedorino.user_catalog.presentation.model.UserBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -35,15 +32,9 @@ class UserControllerTest {
     private UserService service;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @BeforeEach
-    void setUpObjectMapper() {
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-    }
-
     @Test
     void testGetAll_FilledDatabase_ShouldReturnListWithAllUsers() throws Exception {
-        User user1 = new User("1", "1", LocalDate.of(1991, 1, 1), "1", "1");
+        User user1 = new UserBuilder().login("1").password("1").email("1").build();
         given(service.getAllUsers()).willReturn(List.of(user1));
         this.mockMvc.perform(get("/users"))
                 .andDo(print())
@@ -53,7 +44,7 @@ class UserControllerTest {
 
     @Test
     void testPostAll_FilledDatabase_ShouldReturnListWithAllUsersAndNewUser() throws Exception {
-        User user2 = new User("2", "2", LocalDate.of(1992, 2, 2), "2", "2");
+        User user2 = new UserBuilder().login("2").password("2").email("2").build();
         given(service.createNewUser(user2)).willReturn(user2);
         String user2json = objectMapper.writeValueAsString(user2);
         RequestBuilder postRequest = post("/users")
@@ -75,7 +66,7 @@ class UserControllerTest {
 
     @Test
     void testPutOne_UpdateNonExistingUserFromFilledDatabase_ShouldThrowException() throws Exception {
-        User user3 = new User("3", "3", LocalDate.of(1993, 3, 3), "3", "3");
+        User user3 = new UserBuilder().login("3").password("3").email("3").build();
         String user3Json = objectMapper.writeValueAsString(user3);
         RequestBuilder putRequest = put("/users/999")
                 .contentType(MediaType.APPLICATION_JSON)

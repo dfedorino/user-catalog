@@ -3,129 +3,77 @@ package com.dfedorino.user_catalog.presentation.model;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-import java.time.Month;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserTest extends BaseEntityTest {
     @Test
-    public void testGetFirstName() {
-        assertThat(new User().getFirstName()).isNull();
+    public void testGetLogin() {
+        assertThat(new UserBuilder().build().getLogin()).isNull();
     }
 
     @Test
-    public void testGetFamilyName() {
-        assertThat(new User().getFirstName()).isNull();
+    public void testGetPassword() {
+        assertThat(new UserBuilder().build().getPassword()).isNull();
     }
 
     @Test
-    public void testGetDateOfBirth() {
-        assertThat(new User().getDateOfBirth()).isNull();
+    public void testGetEmail() {
+        assertThat(new UserBuilder().build().getEmail()).isNull();
     }
 
     @Test
-    public void testGetAddress() {
-        assertThat(new User().getAddress()).isNull();
+    public void testSetLogin() {
+        User user = new UserBuilder().login("login").build();
+        assertThat(user.getLogin()).isEqualTo("login");
+        assertThat(user.getPassword()).isNull();
+        assertThat(user.getEmail()).isNull();
     }
 
     @Test
-    public void testGetPhoneNumber() {
-        assertThat(new User().getPhoneNumber()).isNull();
+    public void testSetPassword() {
+        User user = new UserBuilder().password("password").build();
+        assertThat(user.getLogin()).isNull();
+        assertThat(user.getPassword()).isEqualTo("password");
+        assertThat(user.getEmail()).isNull();
     }
 
     @Test
-    public void testSetFirstName() {
-        User user = new User();
-        user.setFirstName("FirstName");
-        assertThat(user.getFirstName()).isEqualTo("FirstName");
-    }
-
-    @Test
-    public void testSetFamilyName() {
-        User user = new User();
-        user.setFirstName("FamilyName");
-        assertThat(user.getFirstName()).isEqualTo("FamilyName");
-    }
-
-    @Test
-    public void testSetDateOfBirth() {
-        User user = new User();
-        LocalDate dob = LocalDate.of(1970, Month.JANUARY, 1);
-        user.setDateOfBirth(dob);
-        assertThat(user.getDateOfBirth()).isEqualTo(dob);
-    }
-
-    @Test
-    public void testSetAddress() {
-        User user = new User();
-        user.setAddress("Address");
-        assertThat(user.getAddress()).isEqualTo("Address");
-    }
-
-    @Test
-    public void testSetPhoneNumber() {
-        User user = new User();
-        user.setPhoneNumber("Phone Number");
-        assertThat(user.getPhoneNumber()).isEqualTo("Phone Number");
+    public void testSetEmail() {
+        User user = new UserBuilder().email("email").build();
+        assertThat(user.getLogin()).isNull();
+        assertThat(user.getLogin()).isNull();
+        assertThat(user.getEmail()).isEqualTo("email");
     }
 
     @Test
     public void testTestEquals_AllFieldsAreSame_UsersAreEqual() {
-        String firstName = "FirstName";
-        String familyName = "FamilyName";
-        LocalDate dob = LocalDate.of(1970, Month.JANUARY, 1);
-        String address = "Address";
-        String phone = "Phone Number";
-        User first = new User(firstName, familyName, dob, address, phone);
-        User second = new User(firstName, familyName, dob, address, phone);
-        assertThat(first).isEqualTo(second);
+        assertThat(
+                new UserBuilder()
+                        .login("login")
+                        .password("password")
+                        .email("email")
+                        .build())
+        .isEqualTo(
+                new UserBuilder()
+                        .login("login")
+                        .password("password")
+                        .email("email")
+                        .build());
     }
 
     @Test
     public void testTestEquals_EmptyUsers_UsersAreEqual() {
-        User first = new User();
-        User second = new User();
+        User first = new UserBuilder().build();
+        User second = new UserBuilder().build();
         assertThat(first).isEqualTo(second);
         assertThat(first.hashCode()).isEqualTo(second.hashCode());
     }
 
     @Test
     public void testTestEquals_AllFieldsAreSameExceptName_UsersAreNotEqual() {
-        String firstName = "FirstName";
-        String familyName = "FamilyName";
-        LocalDate dob = LocalDate.of(1970, Month.JANUARY, 1);
-        String address = "Address";
-        String phone = "Phone Number";
-        User first = new User(firstName, familyName, dob, address, phone);
-        User second = new User("Second Name", familyName, dob, address, phone);
+        User first = new UserBuilder().login("login1").password("pass1").email("email1").build();
+        User second = new UserBuilder().login("login2").password("pass2").email("email2").build();
         assertThat(first).isNotEqualTo(second);
         assertThat(first.hashCode()).isNotEqualTo(second.hashCode());
-    }
-
-    @Test
-    public void testToString_EmptyUser_ClassNameAndAllFieldsAreNull() {
-        User user = new User();
-        String expectedToString = "User(firstName=null, familyName=null, dateOfBirth=null, address=null, phoneNumber=null)";
-        assertThat(user.toString()).isEqualTo(expectedToString);
-    }
-
-    @Test
-    public void testToString_FilledUser_ClassNameAndAllFieldsWithValues() {
-        String firstName = "First Name";
-        String familyName = "Family Name";
-        LocalDate dateOfBirth = LocalDate.of(1970, Month.JANUARY, 1);
-        String address = "Address";
-        String phoneNumber = "Phone Number";
-        User user = new User(firstName, familyName, dateOfBirth, address, phoneNumber);
-
-        String expectedToString = "User(" +
-                "firstName=" + firstName +
-                ", familyName=" + familyName +
-                ", dateOfBirth=" + dateOfBirth +
-                ", address=" + address +
-                ", phoneNumber=" + phoneNumber +
-                ")";
-        assertThat(user.toString()).isEqualTo(expectedToString);
     }
 }
