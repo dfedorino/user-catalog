@@ -21,11 +21,6 @@ public class UserController {
         this.service = service;
     }
 
-    @GetMapping("/login")
-    String login() {
-        return "You must login first!";
-    }
-
     @GetMapping("/users")
     List<User> all() {
         return service.getAllUsers();

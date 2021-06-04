@@ -1,0 +1,51 @@
+package com.dfedorino.user_catalog.application;
+
+import org.springframework.core.annotation.Order;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+@Order(1)
+public class CookieFilter extends OncePerRequestFilter {
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws IOException, ServletException {
+        System.out.println(">> " + request.getMethod() + " request to " + request.getRequestURI() + " is being filtered...");
+        Cookie authCookie;
+        if (request.getCookies() == null || (authCookie = getAuthCookie(request.getCookies())) == null) {
+            System.out.println(">> Authorization cookie was not found, redirect to /auth page");
+            response.sendRedirect("/auth");
+        } else {
+            System.out.println(">> Authorization cookie found, validate JWT token...");
+            boolean isValid = authCookie.getValue().equals("JwtToken"); // validation logic
+            if (isValid) {
+                System.out.println(">> Token is valid, let the request proceed to other filters...");
+                filterChain.doFilter(request, response);
+            } else {
+                System.out.println(">> Token is invalid, redirect to /auth page");
+                response.sendRedirect("/auth");
+            }
+        }
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return "/auth".equals(path);
+    }
+
+    private Cookie getAuthCookie(Cookie[] cookies) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("Authorization")) {
+                return cookie;
+            }
+        }
+        return null;
+    }
+}

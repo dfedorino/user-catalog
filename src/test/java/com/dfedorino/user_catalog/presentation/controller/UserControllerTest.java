@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
+import javax.servlet.http.Cookie;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
@@ -34,9 +35,9 @@ class UserControllerTest {
 
     @Test
     void testGetAll_FilledDatabase_ShouldReturnListWithAllUsers() throws Exception {
-        User user1 = new UserBuilder().login("1").password("1").email("1").build();
+        User user1 = new UserBuilder().login("login1").password("pass1").email("email1").build();
         given(service.getAllUsers()).willReturn(List.of(user1));
-        this.mockMvc.perform(get("/users"))
+        this.mockMvc.perform(get("/users").cookie(new Cookie("Authorization", "JwtToken")))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of(user1))));
@@ -44,10 +45,11 @@ class UserControllerTest {
 
     @Test
     void testPostAll_FilledDatabase_ShouldReturnListWithAllUsersAndNewUser() throws Exception {
-        User user2 = new UserBuilder().login("2").password("2").email("2").build();
+        User user2 = new UserBuilder().login("login2").password("pass2").email("email2").build();
         given(service.createNewUser(user2)).willReturn(user2);
         String user2json = objectMapper.writeValueAsString(user2);
         RequestBuilder postRequest = post("/users")
+                .cookie(new Cookie("Authorization", "JwtToken"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(user2json);
         this.mockMvc.perform(postRequest)
@@ -58,7 +60,7 @@ class UserControllerTest {
 
     @Test
     void testGetOne_GetNonExistingUserFromFilledDatabase_ShouldThrowException() throws Exception {
-        this.mockMvc.perform(get("/users/999"))
+        this.mockMvc.perform(get("/users/999").cookie(new Cookie("Authorization", "JwtToken")))
                 .andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string("Could not find user 999"));
@@ -69,6 +71,7 @@ class UserControllerTest {
         User user3 = new UserBuilder().login("3").password("3").email("3").build();
         String user3Json = objectMapper.writeValueAsString(user3);
         RequestBuilder putRequest = put("/users/999")
+                .cookie(new Cookie("Authorization", "JwtToken"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(user3Json);
         this.mockMvc.perform(putRequest)
