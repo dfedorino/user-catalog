@@ -8,15 +8,15 @@ import org.springframework.context.annotation.Configuration;
 public class FilterRegistrationConfig {
 
     @Bean
-    public FilterRegistrationBean<CookieFilter> cookieValidatorFilter() {
-        FilterRegistrationBean<CookieFilter> registrationBean = new FilterRegistrationBean<>();
+    public FilterRegistrationBean<HeaderFilter> cookieValidatorFilter() {
+        FilterRegistrationBean<HeaderFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(cookieFilter());
         registrationBean.addUrlPatterns("*");
         return registrationBean;
     }
 
     @Bean
-    public CookieFilter cookieFilter() {
-        return new CookieFilter();
+    public HeaderFilter cookieFilter() {
+        return new HeaderFilter();
     }
 }

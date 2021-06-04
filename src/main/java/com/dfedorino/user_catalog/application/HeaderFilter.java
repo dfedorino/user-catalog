@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Order(1)
-public class CookieFilter extends OncePerRequestFilter {
+public class HeaderFilter extends OncePerRequestFilter {
     @Autowired
     SecurityService securityService;
 
@@ -20,14 +20,15 @@ public class CookieFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
         System.out.println(">> " + request.getMethod() + " request to " + request.getRequestURI() + " is being filtered...");
+        String authValue = request.getHeader("Authorization");
         Cookie authCookie;
-        if (request.getCookies() == null || (authCookie = getAuthCookie(request.getCookies())) == null) {
-            System.out.println(">> Authorization cookie was not found, redirect to /auth page");
+        if (authValue == null) {
+            System.out.println(">> Authorization header was not found, redirect to /auth page");
             response.sendRedirect("/auth");
         } else {
-            System.out.println(">> Authorization cookie found, validate JWT token...");
-            boolean isValid = securityService.isValidJwt(authCookie.getValue()); // validation logic
-            if (isValid) {
+            System.out.println(">> Authorization header found, validate JWT token...");
+            boolean headerContainsValidToken = securityService.isValidToken(authValue);
+            if (headerContainsValidToken) {
                 System.out.println(">> Token is valid, let the request proceed to other filters...");
                 filterChain.doFilter(request, response);
             } else {

@@ -29,8 +29,7 @@ public class AuthorizationController {
         String login = json.get("login").asText();
         String password = json.get("password").asText();
         if (service.isValidUserData(login, password)) {
-            service.addAuthorizationCookie(response);
-            response.sendRedirect("/users");
+            service.addJwtToResponse(response);
         } else {
             throw new UserNotFoundException(login);
         }
