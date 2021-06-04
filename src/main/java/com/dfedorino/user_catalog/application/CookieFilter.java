@@ -1,5 +1,6 @@
 package com.dfedorino.user_catalog.application;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -12,6 +13,8 @@ import java.io.IOException;
 
 @Order(1)
 public class CookieFilter extends OncePerRequestFilter {
+    @Autowired
+    SecurityService securityService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -23,7 +26,7 @@ public class CookieFilter extends OncePerRequestFilter {
             response.sendRedirect("/auth");
         } else {
             System.out.println(">> Authorization cookie found, validate JWT token...");
-            boolean isValid = authCookie.getValue().equals("JwtToken"); // validation logic
+            boolean isValid = securityService.isValidJwt(authCookie.getValue()); // validation logic
             if (isValid) {
                 System.out.println(">> Token is valid, let the request proceed to other filters...");
                 filterChain.doFilter(request, response);

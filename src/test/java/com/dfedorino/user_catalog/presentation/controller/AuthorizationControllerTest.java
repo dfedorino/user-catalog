@@ -45,7 +45,10 @@ class AuthorizationControllerTest {
                         .email("email1").build());
         RequestBuilder postRequest = post("/auth")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\":" + "\"login1\"}");
+                .content("{" +
+                            "\"login\":" + "\"login1\"," +
+                            "\"password\":" + "\"pass1\"" +
+                        "}");
         this.mockMvc.perform(postRequest)
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
@@ -57,7 +60,10 @@ class AuthorizationControllerTest {
     void authenticate_whenNonExistingLoginIsSent_thenPutCookieAndRedirectToHomePage() throws Exception {
         RequestBuilder postRequest = post("/auth")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\":" + "\"login999\"}");
+                .content("{" +
+                            "\"login\":" + "\"login999\"," +
+                            "\"password\":" + "\"pass999\"" +
+                        "}");
         this.mockMvc.perform(postRequest)
                 .andDo(print())
                 .andExpect(status().is4xxClientError())
