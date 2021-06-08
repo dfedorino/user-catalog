@@ -1,10 +1,10 @@
-package com.dfedorino.user_catalog.application;
+package com.dfedorino.user_catalog.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.dfedorino.user_catalog.presentation.model.User;
+import com.dfedorino.user_catalog.repository.User;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;

@@ -1,4 +1,4 @@
-package com.dfedorino.user_catalog.application;
+package com.dfedorino.user_catalog.controller;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,5 @@
-package com.dfedorino.user_catalog.application;
+package com.dfedorino.user_catalog.repository;
 
-import com.dfedorino.user_catalog.presentation.model.User;
-import com.dfedorino.user_catalog.presentation.model.UserBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;

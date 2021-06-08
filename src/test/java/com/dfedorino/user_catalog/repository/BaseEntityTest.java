@@ -1,5 +1,7 @@
-package com.dfedorino.user_catalog.presentation.model;
+package com.dfedorino.user_catalog.repository;
 
+import com.dfedorino.user_catalog.repository.BaseEntity;
+import com.dfedorino.user_catalog.repository.UserBuilder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

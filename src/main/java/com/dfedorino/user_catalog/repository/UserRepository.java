@@ -1,6 +1,5 @@
-package com.dfedorino.user_catalog.application;
+package com.dfedorino.user_catalog.repository;
 
-import com.dfedorino.user_catalog.presentation.model.User;
 import org.springframework.data.repository.CrudRepository;
 
 public interface UserRepository extends CrudRepository<User, Long> {

@@ -1,7 +1,7 @@
-package com.dfedorino.user_catalog.presentation.controller;
+package com.dfedorino.user_catalog.controller;
 
-import com.dfedorino.user_catalog.application.SecurityService;
-import com.dfedorino.user_catalog.presentation.model.exception.UserNotFoundException;
+import com.dfedorino.user_catalog.service.SecurityService;
+import com.dfedorino.user_catalog.repository.exception.UserNotFoundException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

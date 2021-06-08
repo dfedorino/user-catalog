@@ -1,7 +1,8 @@
-package com.dfedorino.user_catalog.presentation.controller;
+package com.dfedorino.user_catalog.controller;
 
-import com.dfedorino.user_catalog.application.UserService;
-import com.dfedorino.user_catalog.presentation.model.UserBuilder;
+import com.dfedorino.user_catalog.service.UserService;
+import com.dfedorino.user_catalog.controller.AuthorizationController;
+import com.dfedorino.user_catalog.repository.UserBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

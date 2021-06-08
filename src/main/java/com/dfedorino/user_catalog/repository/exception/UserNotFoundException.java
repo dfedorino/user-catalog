@@ -1,4 +1,4 @@
-package com.dfedorino.user_catalog.presentation.model.exception;
+package com.dfedorino.user_catalog.repository.exception;
 
 public class UserNotFoundException extends RuntimeException{
     public UserNotFoundException(Long id) {

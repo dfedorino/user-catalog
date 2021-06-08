@@ -1,6 +1,6 @@
-package com.dfedorino.user_catalog.presentation.controller;
+package com.dfedorino.user_catalog.controller;
 
-import com.dfedorino.user_catalog.presentation.model.exception.UserNotFoundException;
+import com.dfedorino.user_catalog.repository.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

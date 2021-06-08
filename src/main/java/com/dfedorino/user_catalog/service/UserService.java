@@ -1,6 +1,7 @@
-package com.dfedorino.user_catalog.application;
+package com.dfedorino.user_catalog.service;
 
-import com.dfedorino.user_catalog.presentation.model.User;
+import com.dfedorino.user_catalog.repository.UserRepository;
+import com.dfedorino.user_catalog.repository.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

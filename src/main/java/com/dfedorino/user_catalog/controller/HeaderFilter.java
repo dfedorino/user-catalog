@@ -1,5 +1,6 @@
-package com.dfedorino.user_catalog.application;
+package com.dfedorino.user_catalog.controller;
 
+import com.dfedorino.user_catalog.service.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.filter.OncePerRequestFilter;
