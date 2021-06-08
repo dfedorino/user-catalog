@@ -1,9 +1,8 @@
 package com.dfedorino.user_catalog.controller;
 
-import com.dfedorino.user_catalog.service.SecurityService;
 import com.dfedorino.user_catalog.repository.exception.UserNotFoundException;
+import com.dfedorino.user_catalog.service.SecurityService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +16,6 @@ public class AuthorizationController {
 
     AuthorizationController(SecurityService service) {
         this.service = service;
-    }
-
-    @GetMapping("/auth")
-    String loginPage() {
-        return "Authentication page, please send login and password!";
     }
 
     @PostMapping("/auth")

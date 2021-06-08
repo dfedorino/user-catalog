@@ -10,13 +10,13 @@ public class FilterRegistrationConfig {
     @Bean
     public FilterRegistrationBean<HeaderFilter> cookieValidatorFilter() {
         FilterRegistrationBean<HeaderFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(cookieFilter());
+        registrationBean.setFilter(headerFilter());
         registrationBean.addUrlPatterns("*");
         return registrationBean;
     }
 
     @Bean
-    public HeaderFilter cookieFilter() {
+    public HeaderFilter headerFilter() {
         return new HeaderFilter();
     }
 }

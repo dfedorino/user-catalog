@@ -1,8 +1,9 @@
 package com.dfedorino.user_catalog.controller;
 
-import com.dfedorino.user_catalog.service.UserService;
-import com.dfedorino.user_catalog.controller.AuthorizationController;
+import com.dfedorino.user_catalog.repository.User;
 import com.dfedorino.user_catalog.repository.UserBuilder;
+import com.dfedorino.user_catalog.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,12 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(AuthorizationController.class)
@@ -30,41 +28,38 @@ class AuthorizationControllerTest {
     private UserService service;
 
     @Test
-    void loginPage_whenGetReceived_thenSendAuthPage() throws Exception {
-        this.mockMvc.perform(get("/auth"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().string("Authentication page, please send login and password!"));
-    }
-
-    @Test
-    void authenticate_whenExistingLoginIsSent_thenPutCookieAndRedirectToHomePage() throws Exception {
-        given(service.getUserByLogin("login1"))
-                .willReturn(new UserBuilder()
-                        .login("login1")
-                        .password("pass1")
-                        .email("email1").build());
+    void authenticate_whenExistingLoginIsSent_thenSendTokenToTheResponseBody() throws Exception {
+        String login = "login1";
+        User user = new UserBuilder()
+                .login(login)
+                .password("pass1")
+                .email("email1").build();
+        given(service.getUserByLogin(login))
+                .willReturn(user);
+        String json = new ObjectMapper().writeValueAsString(user);
         RequestBuilder postRequest = post("/auth")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{" +
-                            "\"login\":" + "\"login1\"," +
-                            "\"password\":" + "\"pass1\"" +
-                        "}");
+                .content(json);
         this.mockMvc.perform(postRequest)
                 .andDo(print())
-                .andExpect(status().is3xxRedirection())
-                .andExpect(header().string("Location", "/users"))
-                .andExpect(cookie().value("Authorization", "JwtToken"));
+                .andExpect(status().isOk())
+                .andExpect(content().json(
+                        "{" +
+                        "\"access_token\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkZmVkb3Jpbm8uY29tIn0.5I9gTeH1ebjD2MXbAIOR7i9-_bYPzuhmS-GEkbmcbWA\"," +
+                        "\"token_type\":\"Bearer\"" +
+                                "}"));
     }
 
     @Test
     void authenticate_whenNonExistingLoginIsSent_thenPutCookieAndRedirectToHomePage() throws Exception {
+        User user = new UserBuilder()
+                .login("login999")
+                .password("pass999")
+                .email("email999").build();
+        String json = new ObjectMapper().writeValueAsString(user);
         RequestBuilder postRequest = post("/auth")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{" +
-                            "\"login\":" + "\"login999\"," +
-                            "\"password\":" + "\"pass999\"" +
-                        "}");
+                .content(json);
         this.mockMvc.perform(postRequest)
                 .andDo(print())
                 .andExpect(status().is4xxClientError())

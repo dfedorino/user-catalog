@@ -21,6 +21,9 @@ public class SecurityService {
     }
 
     public boolean isValidToken(String authToken) {
+        if (authToken == null) {
+            return false;
+        }
         String jwt = authToken.split(" ")[1];
         try {
             JWTVerifier verifier = JWT.require(algorithm)
