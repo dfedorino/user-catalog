@@ -3,6 +3,7 @@ package com.dfedorino.user_catalog.controller;
 import com.dfedorino.user_catalog.service.UserService;
 import com.dfedorino.user_catalog.repository.User;
 import com.dfedorino.user_catalog.repository.exception.UserNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,11 +16,8 @@ import java.util.List;
 
 @RestController
 public class UserController {
-    private final UserService service;
-
-    UserController (UserService service) {
-        this.service = service;
-    }
+    @Autowired
+    private UserService service;
 
     @GetMapping("/users")
     List<User> all() {
