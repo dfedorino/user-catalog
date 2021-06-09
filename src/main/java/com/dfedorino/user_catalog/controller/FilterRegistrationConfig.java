@@ -11,7 +11,7 @@ public class FilterRegistrationConfig {
     public FilterRegistrationBean<HeaderFilter> cookieValidatorFilter() {
         FilterRegistrationBean<HeaderFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(headerFilter());
-        registrationBean.addUrlPatterns("*");
+        registrationBean.addUrlPatterns("/users/*");
         return registrationBean;
     }
 

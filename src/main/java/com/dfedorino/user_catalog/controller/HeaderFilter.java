@@ -30,8 +30,7 @@ public class HeaderFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        boolean isAuthenticationRequest = request.getRequestURI().equals("/auth");
-        boolean isRegistrationRequest = request.getRequestURI().equals("/users") & request.getMethod().equalsIgnoreCase("POST");
-        return isAuthenticationRequest || isRegistrationRequest;
+        return  request.getRequestURI().equals("/users") &
+                request.getMethod().equalsIgnoreCase("POST");
     }
 }
