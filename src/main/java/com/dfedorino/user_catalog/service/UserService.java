@@ -2,6 +2,7 @@ package com.dfedorino.user_catalog.service;
 
 import com.dfedorino.user_catalog.repository.UserRepository;
 import com.dfedorino.user_catalog.repository.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,11 +11,8 @@ import java.util.Optional;
 
 @Service
 public class UserService {
+    @Autowired
     UserRepository repository;
-
-    UserService(UserRepository repository) {
-        this.repository = repository;
-    }
 
     public List<User> getAllUsers() {
         List<User> all = new ArrayList<>();
@@ -22,8 +20,15 @@ public class UserService {
         return all;
     }
 
-    public User createNewUser(User user) {
-        return repository.save(user);
+    public Optional<User> createNewUser(User user) {
+        User userWithSameLogin = repository.findByLogin(user.getLogin());
+        User userWithSameEmail = repository.findByEmail(user.getEmail());
+        boolean userAlreadyExists = userWithSameLogin != null || userWithSameEmail != null;
+        if (userAlreadyExists) {
+            return Optional.empty();
+        } else {
+            return Optional.of(repository.save(user));
+        }
     }
 
     public Optional<User> getUserById(Long id) {

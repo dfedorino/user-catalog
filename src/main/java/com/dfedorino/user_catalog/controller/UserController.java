@@ -1,8 +1,9 @@
 package com.dfedorino.user_catalog.controller;
 
-import com.dfedorino.user_catalog.service.UserService;
 import com.dfedorino.user_catalog.repository.User;
+import com.dfedorino.user_catalog.repository.exception.UserAlreadyExistsException;
 import com.dfedorino.user_catalog.repository.exception.UserNotFoundException;
+import com.dfedorino.user_catalog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +27,7 @@ public class UserController {
 
     @PostMapping("/users")
     User newUser(@RequestBody User newUser) {
-        return service.createNewUser(newUser);
+        return service.createNewUser(newUser).orElseThrow(UserAlreadyExistsException::new);
     }
 
     @GetMapping("/users/{login}")
