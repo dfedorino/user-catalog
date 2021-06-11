@@ -16,8 +16,29 @@ class UserRepositoryTest {
 
     @Test
     public void testCrudOperations() {
-        User james = new UserBuilder().login("James").password("pass1").email("james@test.com").build();
-        User josh = new UserBuilder().login("Josh").password("pass2").email("josh@test.com").build();
+        User james = new User();
+        james.setLogin("James");
+        james.setPassword("pass1");
+        james.setEmail("james@test.com");
+
+        Contact jamesContact = new Contact();
+        jamesContact.setZipCode(123456);
+        jamesContact.setStreet("Street 1");
+        jamesContact.setPhoneNumber("123-456-789");
+
+        james.setContact(jamesContact);
+
+        User josh = new User();
+        josh.setLogin("Josh");
+        josh.setPassword("pass2");
+        josh.setEmail("josh@test.com");
+
+        Contact joshContact = new Contact();
+        jamesContact.setZipCode(654321);
+        jamesContact.setStreet("Street 2");
+        jamesContact.setPhoneNumber("987-654-321");
+
+        josh.setContact(joshContact);
 
         // create
         entityManager.persist(james);

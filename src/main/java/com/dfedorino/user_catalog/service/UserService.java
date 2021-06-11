@@ -52,6 +52,7 @@ public class UserService {
         user.setLogin(newUser.getLogin());
         user.setPassword(newUser.getPassword());
         user.setEmail(newUser.getEmail());
+        user.setContact(newUser.getContact());
         return user;
     }
 

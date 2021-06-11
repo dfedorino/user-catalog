@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserTest extends BaseEntityTest {
+public class UserTest {
     @Test
     public void testGetLogin() {
         assertThat(new UserBuilder().build().getLogin()).isNull();
