@@ -30,4 +30,7 @@ public class User {
             referencedColumnName = "contact_id" // name of the primary attribute
     )
     private Contact contact;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "authority_id", referencedColumnName = "authority_id")
+    private Authority authority;
 }

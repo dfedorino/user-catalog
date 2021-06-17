@@ -1,8 +1,6 @@
 package com.dfedorino.user_catalog.controller;
 
 import com.dfedorino.user_catalog.repository.User;
-import com.dfedorino.user_catalog.repository.exception.UserAlreadyExistsException;
-import com.dfedorino.user_catalog.repository.exception.UserNotFoundException;
 import com.dfedorino.user_catalog.service.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,21 +28,17 @@ public class UserController {
 
     @PostMapping("/users")
     User newUser(@RequestBody User newUser) {
-        return service.createNewUser(newUser).orElseThrow(UserAlreadyExistsException::new);
+        return service.createNewUser(newUser);
     }
 
     @GetMapping("/users/{login}")
     User readUser(@PathVariable String login) {
-        User found = service.getUserByLogin(login);
-        if (found == null) {
-            throw new UserNotFoundException(login);
-        }
-        return found;
+        return service.getUserByLogin(login);
     }
 
     @PutMapping("/users/{id}")
     User updateUser(@RequestBody User newUser, @PathVariable Long id) {
-        return service.updateUserById(id, newUser).orElseThrow(() -> new UserNotFoundException(id));
+        return service.updateUserById(id, newUser);
     }
 
     @DeleteMapping("/users/{id}")
