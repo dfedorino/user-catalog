@@ -9,13 +9,18 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    OncePerRequestFilter jwtAuthorizationFilter;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -32,15 +37,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web
                 .ignoring()
                 .antMatchers("/h2-console/**")
-                .antMatchers(HttpMethod.POST, "/users");
+                .antMatchers(HttpMethod.POST, "/users")
+                .antMatchers(HttpMethod.POST, "/login");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // CSRF is disabled to enable Update/Delete operations
+        http.csrf().disable();
+
+        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         http
-            // CSRF is disabled to enable Update/Delete operations
-            .csrf().disable()
-            .authorizeRequests()
+                .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests()
                 .antMatchers("/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
                 .anyRequest().authenticated()
                 .and()
