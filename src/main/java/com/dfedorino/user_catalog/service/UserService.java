@@ -5,11 +5,11 @@ import com.dfedorino.user_catalog.repository.UserDetailsImpl;
 import com.dfedorino.user_catalog.repository.UserRepository;
 import com.dfedorino.user_catalog.repository.exception.UserAlreadyExistsException;
 import com.dfedorino.user_catalog.repository.exception.UserNotFoundException;
+import com.dfedorino.user_catalog.security.CustomPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     UserRepository repository;
     @Autowired
-    PasswordEncoder passwordEncoder;
+    CustomPasswordEncoder passwordEncoder;
 
     public List<User> getAllUsers() {
         List<User> all = new ArrayList<>();
@@ -37,10 +37,19 @@ public class UserService implements UserDetailsService {
         if (userAlreadyExists) {
             throw new UserAlreadyExistsException();
         } else {
-            String hashedPassword = passwordEncoder.encode(user.getPassword());
-            user.setPassword(hashedPassword);
-            return repository.save(user);
+            return repository.save(createUserWithHashedPassword(user));
         }
+    }
+
+    protected User createUserWithHashedPassword(User registered) {
+        User userWithHashedPassword = new User();
+        userWithHashedPassword.setLogin(registered.getLogin());
+        String password = new String(passwordEncoder.generateEncryptedSaltedBytes(registered.getPassword()));
+        userWithHashedPassword.setPassword(password);
+        userWithHashedPassword.setEmail(registered.getEmail());
+        userWithHashedPassword.setContact(registered.getContact());
+        userWithHashedPassword.setAuthority(registered.getAuthority());
+        return userWithHashedPassword;
     }
 
     public User getUserByLogin(String login) {
@@ -62,7 +71,7 @@ public class UserService implements UserDetailsService {
 
     private User getUpdatedUser(User user, User newUser) {
         user.setLogin(newUser.getLogin());
-        user.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        user.setPassword(new String(passwordEncoder.generateEncryptedSaltedBytes(newUser.getPassword())));
         user.setEmail(newUser.getEmail());
         user.setContact(newUser.getContact());
         user.setAuthority(newUser.getAuthority());
