@@ -1,5 +1,6 @@
 package com.dfedorino.user_catalog.controller;
 
+import com.dfedorino.user_catalog.security.CustomPasswordEncoder;
 import com.dfedorino.user_catalog.service.SecurityService;
 import com.dfedorino.user_catalog.service.UserService;
 import lombok.Data;
@@ -19,13 +20,18 @@ public class AuthController {
     UserService userService;
     @Autowired
     SecurityService securityService;
+    @Autowired
+    CustomPasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginPassword loginPassword) {
         UserDetails userDetails = userService.loadUserByUsername(loginPassword.getLogin());
-        //TODO: implement password check and solve issue with received hashed passwords and stored hashed passwords
-        boolean isSuccessfulLogin = userDetails.getUsername().equals(loginPassword.getLogin());
-        if (isSuccessfulLogin) {
+        String login = loginPassword.getLogin();
+        String rawPassword = loginPassword.getPassword();
+        String givenHashedPassword = new String(passwordEncoder.generateEncryptedSaltedBytes(login, rawPassword));
+        String storedHashedPassword = userDetails.getPassword();
+        boolean areMatchingPasswords = storedHashedPassword.equals(givenHashedPassword);
+        if (areMatchingPasswords) {
             String token = securityService.generateJwt(loginPassword.getLogin());
             return ResponseEntity
                     .status(HttpStatus.OK)
@@ -42,7 +48,7 @@ public class AuthController {
     }
 
     @Data
-    private static class LoginPassword {
+    protected static class LoginPassword {
         String login;
         String password;
     }

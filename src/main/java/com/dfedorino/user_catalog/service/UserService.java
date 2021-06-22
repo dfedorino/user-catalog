@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService {
     protected User createUserWithHashedPassword(User registered) {
         User userWithHashedPassword = new User();
         userWithHashedPassword.setLogin(registered.getLogin());
-        String password = new String(passwordEncoder.generateEncryptedSaltedBytes(registered.getPassword()));
+        String password = new String(passwordEncoder.generateEncryptedSaltedBytes(registered.getLogin(), registered.getPassword()));
         userWithHashedPassword.setPassword(password);
         userWithHashedPassword.setEmail(registered.getEmail());
         userWithHashedPassword.setContact(registered.getContact());
@@ -71,7 +71,7 @@ public class UserService implements UserDetailsService {
 
     private User getUpdatedUser(User user, User newUser) {
         user.setLogin(newUser.getLogin());
-        user.setPassword(new String(passwordEncoder.generateEncryptedSaltedBytes(newUser.getPassword())));
+        user.setPassword(new String(passwordEncoder.generateEncryptedSaltedBytes(newUser.getLogin(), newUser.getPassword())));
         user.setEmail(newUser.getEmail());
         user.setContact(newUser.getContact());
         user.setAuthority(newUser.getAuthority());
