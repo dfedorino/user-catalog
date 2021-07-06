@@ -41,14 +41,17 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    protected User createUserWithHashedPassword(User registered) {
+    protected User createUserWithHashedPassword(User registrationData) {
         User userWithHashedPassword = new User();
-        userWithHashedPassword.setLogin(registered.getLogin());
-        String password = new String(passwordEncoder.generateEncryptedSaltedBytes(registered.getLogin(), registered.getPassword()));
+        String login = registrationData.getLogin();
+        String salt = passwordEncoder.generateSalt();
+        String password = passwordEncoder.generateEncryptedSaltedBytes(salt, registrationData.getPassword());
+        userWithHashedPassword.setLogin(login);
+        userWithHashedPassword.setSalt(salt);
         userWithHashedPassword.setPassword(password);
-        userWithHashedPassword.setEmail(registered.getEmail());
-        userWithHashedPassword.setContact(registered.getContact());
-        userWithHashedPassword.setAuthority(registered.getAuthority());
+        userWithHashedPassword.setEmail(registrationData.getEmail());
+        userWithHashedPassword.setContact(registrationData.getContact());
+        userWithHashedPassword.setAuthority(registrationData.getAuthority());
         return userWithHashedPassword;
     }
 
@@ -71,7 +74,8 @@ public class UserService implements UserDetailsService {
 
     private User getUpdatedUser(User user, User newUser) {
         user.setLogin(newUser.getLogin());
-        user.setPassword(new String(passwordEncoder.generateEncryptedSaltedBytes(newUser.getLogin(), newUser.getPassword())));
+        user.setSalt(newUser.getSalt());
+        user.setPassword(new String(passwordEncoder.generateEncryptedSaltedBytes(newUser.getSalt(), newUser.getPassword())));
         user.setEmail(newUser.getEmail());
         user.setContact(newUser.getContact());
         user.setAuthority(newUser.getAuthority());

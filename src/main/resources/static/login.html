@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <p>Please fill in this form to login.</p>
+    <hr>
+
+    <label for="login"><b>Login</b></label>
+    <input type="text" placeholder="Enter Login" name="login" class="login" required>
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" class="psw" required>
+
+    <button type="submit" class="loginbtn">Login</button>
+    <script>
+        const login = document.querySelector('.login');
+        const password = document.querySelector('.psw');
+
+        const loginButton = document.querySelector('.loginbtn');
+
+        loginButton.onclick = () => {
+            let loginValue = login.value;
+            let passwordValue = password.value;
+            let user = {
+                login: loginValue,
+                password: passwordValue,
+            }
+            sendRequest('POST', 'text', 'http://localhost:8080/login', user)
+                .then(d => {
+                    let parsedData = JSON.parse(d);
+<!--                    extract jwt and place it into every following request-->
+                    console.log(parsedData);
+                })
+                .catch(e => console.log(e));
+        }
+
+        function sendRequest(method, type, url, body = null) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open(method, url);
+                xhr.responseType = type;
+                xhr.setRequestHeader('content-type', 'application/json');
+                xhr.onload = () => {
+                    let json = xhr.response;
+                    if (xhr.status >= 400) {
+                        reject(xhr.response);
+                    } else {
+                        resolve(json);
+                    }
+                }
+                xhr.onerror = () => {
+                    reject(xhr.response);
+                }
+                xhr.send(JSON.stringify(body));
+            });
+        }
+    </script>
+</body>
+</html>

@@ -38,7 +38,8 @@ class AuthControllerTest {
     void testLogin_whenPostExistingUserDataRequestToLogin_thenOkResponse() throws Exception {
         String login = "login";
         String password = "password";
-        String storedPassword = new String(passwordEncoder.generateEncryptedSaltedBytes(login, password));
+        String salt = passwordEncoder.generateSalt();
+        String storedPassword = passwordEncoder.generateEncryptedSaltedBytes(salt, password);
         // user as if it is was stored in a real db
         User stored = new User();
         stored.setLogin(login);
@@ -52,6 +53,7 @@ class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(loginPassword));
         // test response
+        System.out.println(mockMvc == null);
         mockMvc.perform(postWithExistingData)
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -61,7 +63,8 @@ class AuthControllerTest {
     void testLogin_whenPostNonExistingUserDataRequestToLogin_then401Response() throws Exception {
         String login = "login";
         String password = "password";
-        String storedPassword = new String(passwordEncoder.generateEncryptedSaltedBytes(login, password));
+        String salt = new String(passwordEncoder.generateSalt());
+        String storedPassword = new String(passwordEncoder.generateEncryptedSaltedBytes(salt, password));
         // user as if it is was stored in a real db
         User stored = new User();
         stored.setLogin(login);

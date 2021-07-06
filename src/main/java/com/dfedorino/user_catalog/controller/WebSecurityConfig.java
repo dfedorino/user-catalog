@@ -34,11 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web
-                .ignoring()
-                .antMatchers("/h2-console/**")
-                .antMatchers(HttpMethod.POST, "/users")
-                .antMatchers(HttpMethod.POST, "/login");
+        web.ignoring().antMatchers("/h2-console/**");
     }
 
     @Override
@@ -51,10 +47,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/users/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-                .anyRequest().authenticated()
+                .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/users").permitAll()
+                .antMatchers("/users/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+                .anyRequest().permitAll()
                 .and()
             .formLogin()
+                .loginPage("/login.html")
                 .permitAll()
                 .and()
             .logout()

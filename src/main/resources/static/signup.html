@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up</title>
+</head>
+<body>
+    <h1>Sign Up</h1>
+    <p>Please fill in this form to create an account.</p>
+    <hr>
+
+    <label for="login"><b>Login</b></label>
+    <input type="text" placeholder="Enter Login" name="login" class="login" required>
+
+    <label for="email"><b>Email</b></label>
+    <input type="text" placeholder="Enter Email" name="email" class="email" required>
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="psw" class="psw" required>
+
+    <label for="psw-repeat"><b>Repeat Password</b></label>
+    <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+
+    <button type="submit" class="signupbtn">Sign Up</button>
+    
+    <script>
+        const login = document.querySelector('.login');
+        const email = document.querySelector('.email');
+        const password = document.querySelector('.psw');
+
+        const signUpButton = document.querySelector('.signupbtn');
+
+        signUpButton.onclick = () => {
+            let loginValue = login.value;
+            let emailValue = email.value;
+            let passwordValue = password.value;
+            let user = {
+                login: loginValue,
+                password: passwordValue,
+                email: emailValue
+            }
+            sendRequest('POST', 'text', 'http://localhost:8080/users', user)
+                .then(d => console.log(d))
+                .catch(e => console.log(e));
+        }
+
+        function sendRequest(method, type, url, body = null) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open(method, url);
+                xhr.responseType = type;
+                xhr.setRequestHeader('content-type', 'application/json');
+                xhr.onload = () => {
+                    let json = xhr.response;
+                    if (xhr.status >= 400) {
+                        reject(xhr.response);
+                    } else {
+                        resolve(json);
+                    }
+                }
+                xhr.onerror = () => {
+                    reject(xhr.response);
+                }
+                xhr.send(JSON.stringify(body));
+            });
+        }
+    </script>
+</body>
+</html>

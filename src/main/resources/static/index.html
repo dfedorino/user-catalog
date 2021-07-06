@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Index</title>
+</head>
+<body>
+<h1>Index page</h1>
+<hr>
+
+<p><a href="login.html">Login</a></p>
+<p><a href="signup.html">Sign Up</a></p>
+<button class="showallusersbtn">Show all users</button>
+<p id="usersField"></p>
+<script>
+    const showAllUsersButton = document.querySelector(".showallusersbtn");
+    const usersField = document.getElementById("usersField");
+
+    showAllUsersButton.onclick = () => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 'http://localhost:8080/users');
+        xhr.responseType = 'text';
+        xhr.onload = () => {
+            let response = xhr.response;
+            usersField.textContent = response;
+        }
+        xhr.send();
+    }
+</script>
+</body>
+</html>

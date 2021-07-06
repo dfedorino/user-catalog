@@ -9,23 +9,23 @@ class CustomPasswordEncoderTest {
 
     @Test
     public void testGetSalt_whenNewLogin_thenNewSalt() {
-        assertThat(passwordEncoder.generateSalt("login")).isNotNull();
+        assertThat(passwordEncoder.generateSalt()).isNotNull();
     }
 
     @Test
     void generateEncryptedSaltedPassword_whenGivenAPassword_thenOutputIsNotEqualToGiven() {
-        String givenLogin = "login";
+        String salt = new String(passwordEncoder.generateSalt());
         String givenPassword = "password";
-        String hashedPassword = new String(passwordEncoder.generateEncryptedSaltedBytes(givenLogin, givenPassword));
+        String hashedPassword = new String(passwordEncoder.generateEncryptedSaltedBytes(salt, givenPassword));
         assertThat(hashedPassword).isNotEqualTo(givenPassword);
     }
 
     @Test
     void generateEncryptedSaltedPassword_whenHashingAPassword_thenAlwaysReturnsSameResult() {
-        String givenLogin = "login";
+        String salt = new String(passwordEncoder.generateSalt());
         String givenPassword = "password";
-        String hashedPassword = new String(passwordEncoder.generateEncryptedSaltedBytes(givenLogin, givenPassword));
-        String sameHashedPassword = new String(passwordEncoder.generateEncryptedSaltedBytes(givenLogin, givenPassword));
+        String hashedPassword = new String(passwordEncoder.generateEncryptedSaltedBytes(salt, givenPassword));
+        String sameHashedPassword = new String(passwordEncoder.generateEncryptedSaltedBytes(salt, givenPassword));
         assertThat(hashedPassword).isEqualTo(sameHashedPassword);
     }
 }
