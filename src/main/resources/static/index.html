@@ -13,17 +13,39 @@
 <p><a href="signup.html">Sign Up</a></p>
 <button class="showallusersbtn">Show all users</button>
 <p id="usersField"></p>
+<input type="text" placeholder="Enter Login" name="login" class="login">
+<button class="showcurrentuserbtn">Show user</button>
+<p id="userField"></p>
 <script>
     const showAllUsersButton = document.querySelector(".showallusersbtn");
     const usersField = document.getElementById("usersField");
+
+    const loginField = document.querySelector(".login");
+    const showCurrentUserButton = document.querySelector(".showcurrentuserbtn");
+    const userField = document.getElementById("userField");
 
     showAllUsersButton.onclick = () => {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'http://localhost:8080/users');
         xhr.responseType = 'text';
         xhr.onload = () => {
-            let response = xhr.response;
-            usersField.textContent = response;
+            usersField.textContent = xhr.response;
+        }
+        xhr.send();
+    }
+
+    showCurrentUserButton.onclick = () => {
+        const xhr = new XMLHttpRequest();
+        let login = loginField.value;
+        let url = 'http://localhost:8080/users/' + login;
+        xhr.open('GET', url);
+        console.log(localStorage);
+        let jwt = localStorage.getItem(login);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + jwt);
+        xhr.responseType = 'json';
+        xhr.onload = () => {
+            let user = xhr.response;
+            userField.textContent = user.login;
         }
         xhr.send();
     }
