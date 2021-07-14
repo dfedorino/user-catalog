@@ -42,6 +42,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // CSRF is disabled to enable Update/Delete operations
         http.csrf().disable();
 
+        // Enables CORS filter which bypasses the authorization checks for OPTIONS requests
+        http.cors();
+
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http
