@@ -4,51 +4,97 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Index</title>
+
+    <style>
+        table{
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+        th, td{
+            padding: 10px 20px;
+            border: 1px solid #000;
+        }
+    </style>
 </head>
-<body>
-<h1>Index page</h1>
-<hr>
+<body id="body">
+    <header>
+        <h1>Index page</h1>
+        <p><a href="login.html">Login</a></p>
+        <p><a href="signup.html">Sign Up</a></p>
+    </header>
+    <hr>
+    <button class="showallusersbtn">Show all users</button>
+    <p id="usersField"></p>
+    <input type="text" placeholder="Enter Login" name="login" class="login">
+    <button class="showcurrentuserbtn">Show user</button>
+    <p id="userField"></p>
+    <script>
+        const showAllUsersButton = document.querySelector(".showallusersbtn");
+        const usersField = document.getElementById("usersField");
 
-<p><a href="login.html">Login</a></p>
-<p><a href="signup.html">Sign Up</a></p>
-<button class="showallusersbtn">Show all users</button>
-<p id="usersField"></p>
-<input type="text" placeholder="Enter Login" name="login" class="login">
-<button class="showcurrentuserbtn">Show user</button>
-<p id="userField"></p>
-<script>
-    const showAllUsersButton = document.querySelector(".showallusersbtn");
-    const usersField = document.getElementById("usersField");
+        const loginField = document.querySelector(".login");
+        const showCurrentUserButton = document.querySelector(".showcurrentuserbtn");
+        const userField = document.getElementById("userField");
 
-    const loginField = document.querySelector(".login");
-    const showCurrentUserButton = document.querySelector(".showcurrentuserbtn");
-    const userField = document.getElementById("userField");
+        showAllUsersButton.onclick = () => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://localhost:8080/users');
+            xhr.responseType = 'json';
+            xhr.onload = () => {
+                let userArray = xhr.response;
+                // table creation
+                let table = document.createElement('table');
+                let thead = document.createElement('thead');
+                let tbody = document.createElement('tbody');
 
-    showAllUsersButton.onclick = () => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', 'http://localhost:8080/users');
-        xhr.responseType = 'text';
-        xhr.onload = () => {
-            usersField.textContent = xhr.response;
+                table.appendChild(thead);
+                table.appendChild(tbody);
+
+                // Adding the entire table to the body tag
+                document.getElementById('usersField').appendChild(table);
+
+                // Creating and adding data to first row of the table
+                let row_1 = document.createElement('tr');
+                let heading_1 = document.createElement('th');
+                heading_1.innerHTML = "Email";
+                let heading_2 = document.createElement('th');
+                heading_2.innerHTML = "Login";
+
+                row_1.appendChild(heading_1);
+                row_1.appendChild(heading_2);
+                thead.appendChild(row_1);
+
+                userArray.forEach(element => {
+                    // Creating and adding data to second row of the table
+                    let row = document.createElement('tr');
+                    let row_data_1 = document.createElement('td');
+                    row_data_1.innerHTML = element.email;
+                    let row_data_2 = document.createElement('td');
+                    row_data_2.innerHTML = element.login;
+
+                    row.appendChild(row_data_1);
+                    row.appendChild(row_data_2);
+                    tbody.appendChild(row);
+                });
+            }
+            xhr.send();
         }
-        xhr.send();
-    }
 
-    showCurrentUserButton.onclick = () => {
-        const xhr = new XMLHttpRequest();
-        let login = loginField.value;
-        let url = 'http://localhost:8080/users/' + login;
-        xhr.open('GET', url);
-        console.log(localStorage);
-        let jwt = localStorage.getItem(login);
-        xhr.setRequestHeader('Authorization', 'Bearer ' + jwt);
-        xhr.responseType = 'json';
-        xhr.onload = () => {
-            let user = xhr.response;
-            userField.textContent = user.login;
+        showCurrentUserButton.onclick = () => {
+            const xhr = new XMLHttpRequest();
+            let login = loginField.value;
+            let url = 'http://localhost:8080/users/' + login;
+            xhr.open('GET', url);
+            console.log(localStorage);
+            let jwt = localStorage.getItem(login);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + jwt);
+            xhr.responseType = 'json';
+            xhr.onload = () => {
+                let user = xhr.response;
+                userField.textContent = user.login;
+            }
+            xhr.send();
         }
-        xhr.send();
-    }
-</script>
+    </script>
 </body>
 </html>
