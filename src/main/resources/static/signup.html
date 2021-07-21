@@ -11,22 +11,54 @@
     <hr>
 
     <label for="login"><b>Login</b></label>
-    <input type="text" placeholder="Enter Login" name="login" class="login" required>
+    <p>
+        <input type="text" placeholder="Enter Login" name="login" class="login" required>
+    </p>
+
 
     <label for="email"><b>Email</b></label>
-    <input type="text" placeholder="Enter Email" name="email" class="email" required>
+    <p>
+        <input type="text" placeholder="Enter Email" name="email" class="email" required>
+    </p>
+
+
+    <label for="phoneNumber"><b>Phone</b></label>
+    <p>
+        <input type="text" placeholder="Enter Phone Number" name="phone" class="phone" required>
+    </p>
+
+
+    <label for="street"><b>Street</b></label>
+    <p>
+        <input type="text" placeholder="Enter Street" name="street" class="street" required>
+    </p>
+
+
+    <label for="zipcode"><b>Zip Code</b></label>
+    <p>
+        <input type="text" placeholder="Enter Zip Code" name="zipcode" class="zipcode" required>
+    </p>
+
 
     <label for="psw"><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" class="psw" required>
+    <p>
+        <input type="password" placeholder="Enter Password" name="psw" class="psw" required>
+    </p>
+
 
     <label for="psw-repeat"><b>Repeat Password</b></label>
-    <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+    <p>
+        <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+    </p>
 
     <button type="submit" class="signupbtn">Sign Up</button>
     
     <script>
         const login = document.querySelector('.login');
         const email = document.querySelector('.email');
+        const phone = document.querySelector('.phone');
+        const street = document.querySelector('.street');
+        const zip = document.querySelector('.zipcode');
         const password = document.querySelector('.psw');
 
         const signUpButton = document.querySelector('.signupbtn');
@@ -34,11 +66,19 @@
         signUpButton.onclick = () => {
             let loginValue = login.value;
             let emailValue = email.value;
+            let phoneValue = phone.value;
+            let streetValue = street.value;
+            let zipValue = zip.value;
             let passwordValue = password.value;
             let user = {
                 login: loginValue,
                 password: passwordValue,
-                email: emailValue
+                email: emailValue,
+                contact: {
+                        phoneNumber: phoneValue,
+                        street: streetValue,
+                        zipCode: zipValue
+                    }
             }
             sendRequest('POST', 'text', 'http://localhost:8080/users', user)
                 .then(d => console.log(d))
