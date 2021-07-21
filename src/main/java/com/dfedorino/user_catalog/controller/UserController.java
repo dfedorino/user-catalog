@@ -1,5 +1,7 @@
 package com.dfedorino.user_catalog.controller;
 
+import com.dfedorino.user_catalog.repository.ClientDto;
+import com.dfedorino.user_catalog.repository.ClientDtoImpl;
 import com.dfedorino.user_catalog.repository.User;
 import com.dfedorino.user_catalog.service.UserService;
 import lombok.extern.log4j.Log4j2;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @Log4j2
@@ -21,9 +24,11 @@ public class UserController {
     private UserService service;
 
     @GetMapping("/users")
-    List<User> all() {
+    List<ClientDto> all() {
         log.debug("request to '/users'");
-        return service.getAllUsers();
+        return service.getAllUsers().stream()
+                .map(ClientDtoImpl::new)
+                .collect(Collectors.toList());
     }
 
     @PostMapping("/users")
