@@ -42,6 +42,8 @@
             xhr.responseType = 'json';
             xhr.onload = () => {
                 let userArray = xhr.response;
+                // clear previous table
+                usersField.innerHTML = '';
                 // table creation
                 let table = document.createElement('table');
                 let thead = document.createElement('thead');
