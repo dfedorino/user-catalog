@@ -1,5 +1,7 @@
 package com.dfedorino.user_catalog.service;
 
+import com.dfedorino.user_catalog.repository.ClientDto;
+import com.dfedorino.user_catalog.repository.ClientDtoImpl;
 import com.dfedorino.user_catalog.repository.User;
 import com.dfedorino.user_catalog.repository.UserDetailsImpl;
 import com.dfedorino.user_catalog.repository.UserRepository;
@@ -22,13 +24,13 @@ public class UserService implements UserDetailsService {
     @Autowired
     CustomPasswordEncoder passwordEncoder;
 
-    public List<User> getAllUsers() {
-        List<User> all = new ArrayList<>();
-        repository.findAll().forEach(all::add);
+    public List<ClientDto> getAllUsers() {
+        List<ClientDto> all = new ArrayList<>();
+        repository.findAll().forEach(user -> all.add(new ClientDtoImpl(user)));
         return all;
     }
 
-    public User createNewUser(User user) {
+    public ClientDto createNewUser(User user) {
         String username = user.getLogin();
         String email = user.getEmail();
         User userWithSameLogin = repository.findByLogin(username);
@@ -37,7 +39,8 @@ public class UserService implements UserDetailsService {
         if (userAlreadyExists) {
             throw new UserAlreadyExistsException();
         } else {
-            return repository.save(createUserWithHashedPassword(user));
+            User saved = repository.save(createUserWithHashedPassword(user));
+            return new ClientDtoImpl(saved);
         }
     }
 
@@ -55,17 +58,18 @@ public class UserService implements UserDetailsService {
         return userWithHashedPassword;
     }
 
-    public User getUserByLogin(String login) {
+    public ClientDto getUserByLogin(String login) {
         User found = repository.findByLogin(login);
         if (found == null) {
             throw new UserNotFoundException(login);
         }
-        return found;
+        return new ClientDtoImpl(found);
     }
 
-    public User updateUserById(Long id, User newUser) {
+    public ClientDto updateUserById(Long id, User newUser) {
         User toBeUpdated = repository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        return repository.save(getUpdatedUser(toBeUpdated, newUser));
+        User saved = repository.save(getUpdatedUser(toBeUpdated, newUser));
+        return new ClientDtoImpl(saved);
     }
 
     public void deleteById(Long id) {
@@ -75,7 +79,7 @@ public class UserService implements UserDetailsService {
     private User getUpdatedUser(User user, User newUser) {
         user.setLogin(newUser.getLogin());
         user.setSalt(newUser.getSalt());
-        user.setPassword(new String(passwordEncoder.generateEncryptedSaltedBytes(newUser.getSalt(), newUser.getPassword())));
+        user.setPassword(passwordEncoder.generateEncryptedSaltedBytes(newUser.getSalt(), newUser.getPassword()));
         user.setEmail(newUser.getEmail());
         user.setContact(newUser.getContact());
         user.setAuthority(newUser.getAuthority());
@@ -84,6 +88,6 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new UserDetailsImpl(this.getUserByLogin(username));
+        return new UserDetailsImpl(repository.findByLogin(username));
     }
 }

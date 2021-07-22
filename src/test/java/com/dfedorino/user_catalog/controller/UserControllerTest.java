@@ -1,5 +1,7 @@
 package com.dfedorino.user_catalog.controller;
 
+import com.dfedorino.user_catalog.repository.ClientDto;
+import com.dfedorino.user_catalog.repository.ClientDtoImpl;
 import com.dfedorino.user_catalog.repository.User;
 import com.dfedorino.user_catalog.repository.UserBuilder;
 import com.dfedorino.user_catalog.service.UserService;
@@ -35,7 +37,7 @@ class UserControllerTest {
 //    @Test
     void testGetAll_FilledDatabase_ShouldReturnListWithAllUsers() throws Exception {
         User user1 = new UserBuilder().login("login1").password("pass1").email("email1").build();
-        given(service.getAllUsers()).willReturn(List.of(user1));
+        given(service.getAllUsers()).willReturn(List.of(new ClientDtoImpl(user1)));
         this.mockMvc.perform(get("/users"))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -45,7 +47,8 @@ class UserControllerTest {
     @Test
     void testPostAll_FilledDatabase_ShouldReturnListWithAllUsersAndNewUser() throws Exception {
         User user2 = new UserBuilder().login("login2").password("pass2").email("email2").build();
-        given(service.createNewUser(user2)).willReturn(user2);
+        ClientDto clientDto = new ClientDtoImpl(user2);
+        given(service.createNewUser(user2)).willReturn(clientDto);
         String user2json = objectMapper.writeValueAsString(user2);
         RequestBuilder postRequest = post("/users")
                 .contentType(MediaType.APPLICATION_JSON)

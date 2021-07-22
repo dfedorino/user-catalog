@@ -1,7 +1,6 @@
 package com.dfedorino.user_catalog.controller;
 
 import com.dfedorino.user_catalog.repository.ClientDto;
-import com.dfedorino.user_catalog.repository.ClientDtoImpl;
 import com.dfedorino.user_catalog.repository.User;
 import com.dfedorino.user_catalog.service.UserService;
 import lombok.extern.log4j.Log4j2;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Log4j2
@@ -26,23 +24,21 @@ public class UserController {
     @GetMapping("/users")
     List<ClientDto> all() {
         log.debug("request to '/users'");
-        return service.getAllUsers().stream()
-                .map(ClientDtoImpl::new)
-                .collect(Collectors.toList());
+        return service.getAllUsers();
     }
 
     @PostMapping("/users")
-    User newUser(@RequestBody User newUser) {
+    ClientDto newUser(@RequestBody User newUser) {
         return service.createNewUser(newUser);
     }
 
     @GetMapping("/users/{login}")
-    User readUser(@PathVariable String login) {
+    ClientDto readUser(@PathVariable String login) {
         return service.getUserByLogin(login);
     }
 
     @PutMapping("/users/{id}")
-    User updateUser(@RequestBody User newUser, @PathVariable Long id) {
+    ClientDto updateUser(@RequestBody User newUser, @PathVariable Long id) {
         return service.updateUserById(id, newUser);
     }
 

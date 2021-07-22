@@ -1,9 +1,9 @@
 package com.dfedorino.user_catalog.controller;
 
 import com.dfedorino.user_catalog.repository.User;
+import com.dfedorino.user_catalog.repository.UserRepository;
 import com.dfedorino.user_catalog.security.CustomPasswordEncoder;
 import com.dfedorino.user_catalog.service.SecurityService;
-import com.dfedorino.user_catalog.service.UserService;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 public class AuthController {
     @Autowired
-    UserService userService;
+    UserRepository userRepository;
     @Autowired
     SecurityService securityService;
     @Autowired
@@ -27,18 +27,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginPassword loginPassword) {
-        User user = userService.getUserByLogin(loginPassword.getLogin());
-        System.out.println(">> user found -> " + user);
+        User user = userRepository.findByLogin(loginPassword.getLogin());
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         String rawPassword = loginPassword.getPassword();
         String salt = user.getSalt();
-        String hashedGivenPassword = passwordEncoder.generateEncryptedSaltedBytes(salt, rawPassword);
-        String givenHashedPassword = new String(hashedGivenPassword);
+        String givenHashedPassword = passwordEncoder.generateEncryptedSaltedBytes(salt, rawPassword);
         String storedHashedPassword = user.getPassword();
         boolean areMatchingPasswords = storedHashedPassword.equals(givenHashedPassword);
-        System.out.println(">> passwords are matching -> " + areMatchingPasswords);
         if (areMatchingPasswords) {
             String token = securityService.generateJwt(loginPassword.getLogin());
             return ResponseEntity
