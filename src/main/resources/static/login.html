@@ -17,11 +17,15 @@
     <input type="password" placeholder="Enter Password" name="psw" class="psw" required>
 
     <button type="submit" class="loginbtn">Login</button>
+
+    <p id="login-status"></p>
     <script>
         const login = document.querySelector('.login');
         const password = document.querySelector('.psw');
 
         const loginButton = document.querySelector('.loginbtn');
+
+        const loginStatus = document.getElementById("login-status");
 
         loginButton.onclick = () => {
             let loginValue = login.value;
@@ -49,12 +53,19 @@
                     let json = xhr.response;
                     if (xhr.status >= 400) {
                         reject(xhr.response);
+                        loginStatus.innerHTML = '';
+                        loginStatus.innerHTML = 'Login Failed!';
                     } else {
                         resolve(json);
+                        loginStatus.innerHTML = '';
+                        loginStatus.innerHTML = 'Login Successful!';
+                        window.location.replace("http://localhost:8080");
                     }
                 }
                 xhr.onerror = () => {
                     reject(xhr.response);
+                    loginStatus.innerHTML = '';
+                    loginStatus.innerHTML = 'Login Failed!';
                 }
                 xhr.send(JSON.stringify(body));
             });
