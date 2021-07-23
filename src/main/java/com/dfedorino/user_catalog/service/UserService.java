@@ -2,6 +2,7 @@ package com.dfedorino.user_catalog.service;
 
 import com.dfedorino.user_catalog.repository.ClientDto;
 import com.dfedorino.user_catalog.repository.ClientDtoImpl;
+import com.dfedorino.user_catalog.repository.Contact;
 import com.dfedorino.user_catalog.repository.User;
 import com.dfedorino.user_catalog.repository.UserDetailsImpl;
 import com.dfedorino.user_catalog.repository.UserRepository;
@@ -66,9 +67,10 @@ public class UserService implements UserDetailsService {
         return new ClientDtoImpl(found);
     }
 
-    public ClientDto updateUserById(Long id, User newUser) {
-        User toBeUpdated = repository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        User saved = repository.save(getUpdatedUser(toBeUpdated, newUser));
+    public ClientDto updateUserByLogin(String login, ClientDto newUser) {
+        User oldUser = repository.findByLogin(login);
+        updateUserWith(oldUser, newUser);
+        User saved = repository.save(oldUser);
         return new ClientDtoImpl(saved);
     }
 
@@ -76,14 +78,14 @@ public class UserService implements UserDetailsService {
         repository.deleteById(id);
     }
 
-    private User getUpdatedUser(User user, User newUser) {
+    private void updateUserWith(User user, ClientDto newUser) {
         user.setLogin(newUser.getLogin());
-        user.setSalt(newUser.getSalt());
-        user.setPassword(passwordEncoder.generateEncryptedSaltedBytes(newUser.getSalt(), newUser.getPassword()));
         user.setEmail(newUser.getEmail());
-        user.setContact(newUser.getContact());
-        user.setAuthority(newUser.getAuthority());
-        return user;
+        Contact newContact = new Contact();
+        newContact.setPhoneNumber(newUser.getPhoneNumber());
+        newContact.setStreet(newUser.getStreet());
+        newContact.setZipCode(Integer.parseInt(newUser.getZipCode()));
+        user.setContact(newContact);
     }
 
     @Override

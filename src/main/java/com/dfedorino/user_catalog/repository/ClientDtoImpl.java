@@ -1,14 +1,16 @@
 package com.dfedorino.user_catalog.repository;
 
-import lombok.Value;
+import lombok.Data;
 
-@Value
+@Data
 public class ClientDtoImpl implements ClientDto {
     private String login;
     private String email;
     private String phoneNumber;
     private String zipCode;
     private String street;
+
+    public ClientDtoImpl() {}
 
     public ClientDtoImpl(User user) {
         this.login = user.getLogin();

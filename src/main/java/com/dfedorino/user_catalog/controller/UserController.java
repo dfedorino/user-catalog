@@ -37,9 +37,9 @@ public class UserController {
         return service.getUserByLogin(login);
     }
 
-    @PutMapping("/users/{id}")
-    ClientDto updateUser(@RequestBody User newUser, @PathVariable Long id) {
-        return service.updateUserById(id, newUser);
+    @PutMapping("/users/{login}")
+    ClientDto updateUser(@RequestBody ClientDto newUser, @PathVariable String login) {
+        return service.updateUserByLogin(login, newUser);
     }
 
     @DeleteMapping("/users/{id}")

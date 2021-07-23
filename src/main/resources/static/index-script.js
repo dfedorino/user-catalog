@@ -22,6 +22,7 @@ const showAllUsersButton = document.querySelector(".showallusersbtn");
             // };
             // let ua = [user, user1];
             // createTable(ua);
+            usersField.innerHTML = '';
             const xhr = new XMLHttpRequest();
             xhr.open('GET', 'http://localhost:8080/users');
             xhr.responseType = 'json';
@@ -98,7 +99,68 @@ const showAllUsersButton = document.querySelector(".showallusersbtn");
 
         function createUserDataRow(user) {
             let userData = [user.login, user.email, user.phoneNumber, user.street, user.zipCode];
-            return createTableDataRow(userData);
+            let tableRow = createTableDataRow(userData);
+            tableRow.setAttribute('contenteditable', true);
+            tableRow.addEventListener('click', (ev) => {
+                if (!inEditing(tableRow)) {
+                    startEditingRow(tableRow);
+                }
+            });
+            return tableRow;
+        }
+
+        function startEditingRow(tr) {
+            tr.className = 'in-editing';
+            let btnTd = document.createElement('td');
+            btnTd.setAttribute('contenteditable', false);
+            let saveBtn = document.createElement('button');
+            saveBtn.innerHTML = 'Save';
+            saveBtn.addEventListener('click', (ev) => {
+                ev.stopPropagation();
+                finishEditingRow(tr);
+            })
+            let cancelBtn = document.createElement('button');
+            cancelBtn.innerHTML = 'Cancel';
+            cancelBtn.addEventListener('click', (ev) => {
+                cancelEditingRow(tr);
+            })
+            btnTd.appendChild(saveBtn);
+            btnTd.appendChild(cancelBtn);
+            tr.append(btnTd);
+        }
+
+        function finishEditingRow(userDataRow) {
+            let dataArray = userDataRow.cells;
+            let userLogin = dataArray[0].innerHTML;
+            let userEmail = dataArray[1].innerHTML;
+            let userPhone = dataArray[2].innerHTML;
+            let userStreet = dataArray[3].innerHTML;
+            let userZip = dataArray[4].innerHTML;
+            let updatedUser = {
+                login: userLogin,
+                email: userEmail,
+                phoneNumber: userPhone,
+                street: userStreet,
+                zipCode: userZip
+            }
+            console.log('>> send updated user -> ' + updatedUser);
+            // sent xhr put request
+            const xhr = new XMLHttpRequest();
+            xhr.open('PUT', 'http://localhost:8080/users/' + userLogin);
+            xhr.responseType = 'json';
+            xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem(userLogin));
+            xhr.setRequestHeader('Content-Type', 'application/json')
+            xhr.onload = () => {
+                console.log(xhr.response);           
+            }
+            xhr.send(JSON.stringify(updatedUser));
+            userDataRow.deleteCell(userDataRow.cells.length - 1);
+            userDataRow.classList.remove('in-editing');
+            // reload the table
+        }
+
+        function inEditing(tr) {
+            return tr.classList.contains('in-editing');
         }
 
         function createHeading(name) {
