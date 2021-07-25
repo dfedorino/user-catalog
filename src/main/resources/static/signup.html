@@ -52,6 +52,8 @@
     </p>
 
     <button type="submit" class="signupbtn">Sign Up</button>
+
+    <p id="signupstatus"></p>
     
     <script>
         const login = document.querySelector('.login');
@@ -62,6 +64,8 @@
         const password = document.querySelector('.psw');
 
         const signUpButton = document.querySelector('.signupbtn');
+
+        const signUpStatus = document.getElementById('signupstatus');
 
         signUpButton.onclick = () => {
             let loginValue = login.value;
@@ -95,8 +99,11 @@
                     let json = xhr.response;
                     if (xhr.status >= 400) {
                         reject(xhr.response);
+                        signUpStatus.innerHTML = "Sign Up Failed! Zip Code must not contain digits."
                     } else {
                         resolve(json);
+                        signUpStatus.innerHTML = "Sign Up Successful!"
+                        window.location.replace("http://localhost:8080");
                     }
                 }
                 xhr.onerror = () => {
