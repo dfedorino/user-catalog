@@ -55,8 +55,12 @@ function sendPostRequest(newUser) {
                 .then(d => {
                     console.log(d);
                     localStorage.setItem(loginAndPassword.login, d.access_token);
+                    window.location.replace("http://localhost:8080");
                 })
-                .catch(e => console.log(e));
+                .catch(e => {
+                    console.log(e);
+                    addClassAndMessage(loginbtn, 'form-control error', 'Login failed');
+                });
 }
 
 function sendRequest(method, responseType, url, body = null) {
