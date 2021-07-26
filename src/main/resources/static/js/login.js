@@ -52,7 +52,10 @@ function sendPostRequest(newUser) {
         password: newUser.password,
     }
     sendRequest('POST', 'json', 'http://localhost:8080/login', loginAndPassword)
-                .then(d => console.log(d))
+                .then(d => {
+                    console.log(d);
+                    localStorage.setItem(loginAndPassword.login, d.access_token);
+                })
                 .catch(e => console.log(e));
 }
 
