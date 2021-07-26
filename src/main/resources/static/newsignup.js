@@ -19,7 +19,7 @@ form.addEventListener('submit', (e) => {
         passwordCheck: passwordCheck.value.trim()
     }
     checkInputs(newUser);
-    // sendPostRequest(newUser);
+    sendPostRequest(newUser);
 });
 
 function checkInputs(user) {
@@ -87,4 +87,42 @@ function isValidEmail(email) {
 function isValidPassword(password) {
     const re = /^[a-zA-Z0-9!@#$%^&*]{6,16}$/;
     return re.test(String(password));
+}
+
+function sendPostRequest(newUser) {
+    let serverUser = {
+        login: newUser.username,
+        password: newUser.password,
+        email: newUser.email,
+        contact: {
+            phoneNumber: newUser.phone,
+            street: newUser.address,
+            zipCode: newUser.zip
+        }
+    }
+    sendRequest('POST', 'json', 'http://localhost:8080/users', serverUser)
+                .then(d => console.log(d))
+                .catch(e => console.log(e));
+}
+
+function sendRequest(method, responseType, url, body = null) {
+    return new Promise((resolve, reject) => {
+        console.log('>> about to send request with user -> ' + JSON.stringify(body))
+        const xhr = new XMLHttpRequest();
+        xhr.open(method, url);
+        xhr.responseType = responseType;
+        xhr.setRequestHeader('content-type', 'application/json');
+        xhr.onload = () => {
+            let json = xhr.response;
+            if (xhr.status >= 400) {
+                reject(xhr.response);
+            } else {
+                resolve(json);
+            }
+        }
+        xhr.onerror = () => {
+            reject(xhr.response);
+        }
+        xhr.send(JSON.stringify(body));
+    });
 }
