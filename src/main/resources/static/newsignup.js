@@ -19,7 +19,10 @@ form.addEventListener('submit', (e) => {
         passwordCheck: passwordCheck.value.trim()
     }
     checkInputs(newUser);
-    sendPostRequest(newUser);
+    let inputs = [username, email, phone, address, zip, password, passwordCheck];
+    if (allFieldsHaveSuccess(inputs)) {
+        sendPostRequest(newUser);
+    }
 });
 
 function checkInputs(user) {
@@ -89,6 +92,14 @@ function isValidPassword(password) {
     return re.test(String(password));
 }
 
+function allFieldsHaveSuccess(inputs) {
+    for (let i = 0; i < inputs.length; i++) {
+        if (inputs[i].parentElement.classList.contains('error')) {
+            return false;
+        }
+    }
+    return true;
+}
 function sendPostRequest(newUser) {
     let serverUser = {
         login: newUser.username,
