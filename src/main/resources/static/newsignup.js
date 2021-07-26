@@ -9,62 +9,63 @@ const passwordCheck = document.getElementById('password_check');
 
 form.addEventListener('submit', (e) => {
     e.preventDefault();
-
-    checkInputs();
+    let newUser = {
+        username: username.value.trim(),
+        email: email.value.trim(),
+        phone: phone.value.trim(),
+        address: address.value.trim(),
+        zip: zip.value.trim(),
+        password: password.value.trim(),
+        passwordCheck: passwordCheck.value.trim()
+    }
+    checkInputs(newUser);
+    // sendPostRequest(newUser);
 });
 
-function checkInputs() {
-    const usernameValue = username.value.trim();
-    const emailValue = email.value.trim();
-    const phoneValue = phone.value.trim();
-    const addressValue = address.value.trim();
-    const zipValue = zip.value.trim();
-    const passwordValue = password.value.trim();
-    const passwordCheckValue = passwordCheck.value.trim();
-
-    if (usernameValue === '') {
+function checkInputs(user) {
+    if (user.username === '') {
         addClassAndMessage(username, 'form-control error', 'Username cannot be empty');
     } else {
         addClassAndMessage(username, 'form-control success', '');
     }
 
-    if (emailValue === '') {
+    if (user.email === '') {
         addClassAndMessage(email, 'form-control error', 'Email cannot be empty');
-    } else if (!isValidEmail(emailValue)) {
+    } else if (!isValidEmail(user.email)) {
         addClassAndMessage(email, 'form-control error', 'Not a valid email');
     } else {
         addClassAndMessage(email, 'form-control success', '');
     }
 
-    if (phoneValue === '') {
+    if (user.phone === '') {
         addClassAndMessage(phone, 'form-control error', 'Phone cannot be empty');
     } else {
         addClassAndMessage(phone, 'form-control success', '');
     }
 
-    if (addressValue === '') {
+    if (user.address === '') {
         addClassAndMessage(address, 'form-control error', 'Address cannot be empty');
     } else {
         addClassAndMessage(address, 'form-control success', '');
     }
 
-    if (zipValue === '') {
+    if (user.zip === '') {
         addClassAndMessage(zip, 'form-control error', 'Zip code cannot be empty');
     } else {
         addClassAndMessage(zip, 'form-control success', '');
     }
 
-    if (passwordValue === '') {
+    if (user.password === '') {
         addClassAndMessage(password, 'form-control error', 'Password cannot be empty');
-    } else if (!isValidPassword(passwordValue)) {
+    } else if (!isValidPassword(user.password)) {
         addClassAndMessage(password, 'form-control error', 'Not a valid password');
     } else {
         addClassAndMessage(password, 'form-control success', '');
     }
 
-    if (passwordCheckValue !== passwordValue) {
+    if (user.passwordCheck !== user.password) {
         addClassAndMessage(passwordCheck, 'form-control error', 'Passwords do not match');
-    } else if(passwordCheckValue === '') {
+    } else if(user.passwordCheck === '') {
         // do nothing if the password wasn't entered yet
     } else {
         addClassAndMessage(passwordCheck, 'form-control success', '');
