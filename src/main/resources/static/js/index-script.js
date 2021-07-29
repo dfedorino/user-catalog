@@ -6,22 +6,6 @@ const showAllUsersButton = document.querySelector(".showallusersbtn");
         const userField = document.getElementById("userField");
 
         showAllUsersButton.onclick = () => {
-            // let user = {
-            //     login: "login",
-            //     email: "email",
-            //     phoneNumber: "phone",
-            //     street: "street",
-            //     zipCode: "zip"
-            // };
-            // let user1 = {
-            //     login: "login1",
-            //     email: "email1",
-            //     phoneNumber: "phone1",
-            //     street: "street1",
-            //     zipCode: "zip1"
-            // };
-            // let ua = [user, user1];
-            // createTable(ua);
             usersField.innerHTML = '';
             const xhr = new XMLHttpRequest();
             xhr.open('GET', 'http://localhost:8080/users');
@@ -42,7 +26,6 @@ const showAllUsersButton = document.querySelector(".showallusersbtn");
             let login = loginField.value;
             let url = 'http://localhost:8080/users/' + login;
             xhr.open('GET', url);
-            console.log(localStorage);
             let jwt = localStorage.getItem(login);
             xhr.setRequestHeader('Authorization', 'Bearer ' + jwt);
             xhr.responseType = 'json';
@@ -143,7 +126,6 @@ const showAllUsersButton = document.querySelector(".showallusersbtn");
                 street: userStreet,
                 zipCode: userZip
             }
-            console.log('>> send updated user -> ' + updatedUser);
             // sent xhr put request
             const xhr = new XMLHttpRequest();
             xhr.open('PUT', 'http://localhost:8080/users/' + userLogin);
