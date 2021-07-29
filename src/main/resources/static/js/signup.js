@@ -112,7 +112,10 @@ function sendPostRequest(newUser) {
         }
     }
     sendRequest('POST', 'json', 'http://localhost:8080/users', serverUser)
-                .then(d => console.log(d))
+                .then(d => {
+                    console.log(d);
+                    window.location.replace("http://localhost:8080");
+                })
                 .catch(e => console.log(e));
 }
 
