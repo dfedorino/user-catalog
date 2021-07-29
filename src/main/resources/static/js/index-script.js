@@ -1,18 +1,18 @@
 const showAllUsersButton = document.querySelector(".showallusersbtn");
         const usersField = document.getElementById("usersField");
 
-        const loginField = document.querySelector(".login");
-        const showCurrentUserButton = document.querySelector(".showcurrentuserbtn");
-        const userField = document.getElementById("userField");
-
         showAllUsersButton.onclick = () => {
             usersField.innerHTML = '';
             const xhr = new XMLHttpRequest();
-            xhr.open('GET', 'http://localhost:8080/users');
+            let login = localStorage.getItem('lgn');
+            let url = 'http://localhost:8080/users/' + login;
+            xhr.open('GET', url);
+            let jwt = localStorage.getItem(login);
+            xhr.setRequestHeader('Authorization', 'Bearer ' + jwt);
             xhr.responseType = 'json';
             xhr.onload = () => {
-                let userArray = xhr.response;
-                createTable(userArray);           
+                let user = xhr.response;
+                createTable(user);           
             }
 
             xhr.onerror = () => {
@@ -21,22 +21,7 @@ const showAllUsersButton = document.querySelector(".showallusersbtn");
             xhr.send();
         }
 
-        showCurrentUserButton.onclick = () => {
-            const xhr = new XMLHttpRequest();
-            let login = loginField.value;
-            let url = 'http://localhost:8080/users/' + login;
-            xhr.open('GET', url);
-            let jwt = localStorage.getItem(login);
-            xhr.setRequestHeader('Authorization', 'Bearer ' + jwt);
-            xhr.responseType = 'json';
-            xhr.onload = () => {
-                let user = xhr.response;
-                userField.textContent = user.login;
-            }
-            xhr.send();
-        }
-
-        function createTable (userArray) {
+        function createTable (user) {
             // clear previous table
             usersField.innerHTML = '';
             // table creation
@@ -55,11 +40,8 @@ const showAllUsersButton = document.querySelector(".showallusersbtn");
             let headingRow = createHeadingRow(headings);
             thead.appendChild(headingRow);
 
-            userArray.forEach(user => {
-                // Creating and adding data to second row of the table
-                let rowWithUserData = createUserDataRow(user);
-                tbody.appendChild(rowWithUserData); 
-            });
+            let rowWithUserData = createUserDataRow(user);
+                tbody.appendChild(rowWithUserData);
         }
 
         function createHeadingRow(names) {
