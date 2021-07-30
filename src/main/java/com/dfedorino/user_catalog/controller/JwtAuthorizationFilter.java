@@ -58,6 +58,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                     chain.doFilter(request, response);
                 }
             } catch (JWTVerificationException e) {
+                System.out.println(">> failed to verify token");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             }
         } else {

@@ -14,8 +14,12 @@ showMyContacts.onclick = () => {
         xhr.setRequestHeader('Authorization', 'Bearer ' + jwt);
         xhr.responseType = 'json';
         xhr.onload = () => {
-            let user = xhr.response;
-            createTable(user);           
+            let response = xhr.response;
+            if (response.status === 401) {
+                userField.innerHTML = 'Login Required';
+            } else {
+                createTable(response);
+            }          
         }
     
         xhr.onerror = () => {
