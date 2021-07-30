@@ -120,7 +120,7 @@ function finishEditingRow(userDataRow) {
     const xhr = new XMLHttpRequest();
     xhr.open('PUT', 'http://localhost:8080/users/' + userLogin);
     xhr.responseType = 'json';
-    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem(userLogin));
+    xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('localhost_jwt'));
     xhr.setRequestHeader('Content-Type', 'application/json')
     xhr.onload = () => {
         console.log(xhr.response);           
