@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @ControllerAdvice
 class UserNotFoundAdvice {
     @ResponseBody
@@ -14,5 +19,14 @@ class UserNotFoundAdvice {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     String userNotFoundHandler(UserNotFoundException e) {
         return e.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    List<String> userDataConstraintViolationHandler(ConstraintViolationException e) {
+        return e.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.toList());
     }
 }

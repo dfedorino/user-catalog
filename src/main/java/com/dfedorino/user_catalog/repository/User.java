@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Email;
 
 @Data
 @Entity(name = "user")
@@ -25,6 +26,7 @@ public class User {
     @Column(name = "password")
     private String password;
     @Column(name = "email")
+    @Email
     private String email;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn( // a foreign key column

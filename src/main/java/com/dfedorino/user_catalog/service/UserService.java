@@ -84,7 +84,7 @@ public class UserService implements UserDetailsService {
         Contact newContact = new Contact();
         newContact.setPhoneNumber(newUser.getPhoneNumber());
         newContact.setStreet(newUser.getStreet());
-        newContact.setZipCode(Integer.parseInt(newUser.getZipCode()));
+        newContact.setZipCode(newUser.getZipCode());
         user.setContact(newContact);
     }
 

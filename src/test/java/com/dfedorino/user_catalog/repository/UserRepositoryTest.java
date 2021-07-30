@@ -22,7 +22,7 @@ class UserRepositoryTest {
         james.setEmail("james@test.com");
 
         Contact jamesContact = new Contact();
-        jamesContact.setZipCode(123456);
+        jamesContact.setZipCode("123456");
         jamesContact.setStreet("Street 1");
         jamesContact.setPhoneNumber("123-456-789");
 
@@ -34,7 +34,7 @@ class UserRepositoryTest {
         josh.setEmail("josh@test.com");
 
         Contact joshContact = new Contact();
-        jamesContact.setZipCode(654321);
+        jamesContact.setZipCode("654321");
         jamesContact.setStreet("Street 2");
         jamesContact.setPhoneNumber("987-654-321");
 
