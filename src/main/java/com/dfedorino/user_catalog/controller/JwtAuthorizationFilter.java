@@ -46,12 +46,9 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
         if (hasJwtToken(request)) {
             try {
-                System.out.println(">> JWT Token found, processing...");
                 Map<String, Claim> claims = verifyToken(request);
                 setUpSpringAuthentication(claims);
-                chain.doFilter(request, response);
             } catch (JWTVerificationException e) {
-                System.out.println(">> Wrong jwt");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             }
         } else {

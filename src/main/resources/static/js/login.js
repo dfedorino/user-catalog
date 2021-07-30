@@ -55,7 +55,7 @@ function sendPostRequest(newUser) {
                 .then(d => {
                     console.log(d);
                     localStorage.setItem('lgn', loginAndPassword.login);
-                    localStorage.setItem(loginAndPassword.login, d.access_token);
+                    localStorage.setItem('localhost_jwt', d.access_token);
                     window.location.replace("http://localhost:8080");
                 })
                 .catch(e => {
