@@ -55,17 +55,15 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
                 } else {
                     System.out.println(">> token verified, set up authentication");
                     setUpSpringAuthentication(claims);
+                    chain.doFilter(request, response);
                 }
             } catch (JWTVerificationException e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             }
         } else {
             SecurityContextHolder.clearContext();
-            System.out.println(">> pass request further");
             chain.doFilter(request, response);
         }
-
-
     }
 
     private Map<String, Claim> verifyToken(HttpServletRequest request) throws JWTVerificationException {

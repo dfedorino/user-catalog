@@ -37,7 +37,7 @@ function createTable (user) {
     table.appendChild(tbody);
 
     // Adding the entire table to the body tag
-    document.getElementById('usersField').appendChild(table);
+    userField.appendChild(table);
 
     // Creating and adding data to first row of the table
     let headings = ['Login', 'Email', 'Phone', 'Street', 'Zip Code'];
