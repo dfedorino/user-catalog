@@ -1,30 +1,33 @@
-const showAllUsersButton = document.querySelector(".showallusersbtn");
-const usersField = document.getElementById("usersField");
+const showMyContacts = document.querySelector(".showmycontactsbtn");
+const userField = document.getElementById("userField");
 
-showAllUsersButton.onclick = () => {
-    usersField.innerHTML = '';
+showMyContacts.onclick = () => {
+    userField.innerHTML = '';
     const xhr = new XMLHttpRequest();
     let login = localStorage.getItem('lgn');
-    let url = 'http://localhost:8080/users/' + login;
-    xhr.open('GET', url);
-    let jwt = localStorage.getItem('localhost_jwt');
-    xhr.setRequestHeader('Authorization', 'Bearer ' + jwt);
-    xhr.responseType = 'json';
-    xhr.onload = () => {
-        let user = xhr.response;
-        console.log(user);
-        createTable(user);           
+    if (login === null) {
+        userField.innerHTML = 'Login Required';
+    } else {
+        let url = 'http://localhost:8080/users/' + login;
+        xhr.open('GET', url);
+        let jwt = localStorage.getItem('localhost_jwt');
+        xhr.setRequestHeader('Authorization', 'Bearer ' + jwt);
+        xhr.responseType = 'json';
+        xhr.onload = () => {
+            let user = xhr.response;
+            createTable(user);           
+        }
+    
+        xhr.onerror = () => {
+            userField.innerHTML = "Server didn't respond";
+        }
+        xhr.send();
     }
-
-    xhr.onerror = () => {
-        usersField.innerHTML = "Server didn't respond";
-    }
-    xhr.send();
 }
 
 function createTable (user) {
     // clear previous table
-    usersField.innerHTML = '';
+    userField.innerHTML = '';
     // table creation
     let table = document.createElement('table');
     let thead = document.createElement('thead');
