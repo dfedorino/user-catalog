@@ -22,6 +22,7 @@ form.addEventListener('submit', (e) => {
     let inputs = [username, email, phone, address, zip, password, passwordCheck];
     if (allFieldsHaveSuccess(inputs)) {
         sendPostRequest(newUser);
+        window.location.replace("http://localhost:8080/login.html");
     }
 });
 
@@ -121,7 +122,6 @@ function sendPostRequest(newUser) {
 
 function sendRequest(method, responseType, url, body = null) {
     return new Promise((resolve, reject) => {
-        console.log('>> about to send request with user -> ' + JSON.stringify(body))
         const xhr = new XMLHttpRequest();
         xhr.open(method, url);
         xhr.responseType = responseType;
