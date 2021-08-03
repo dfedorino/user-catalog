@@ -22,7 +22,6 @@ form.addEventListener('submit', (e) => {
     let inputs = [username, email, phone, address, zip, password, passwordCheck];
     if (allFieldsHaveSuccess(inputs)) {
         sendPostRequest(newUser);
-        window.location.replace("http://localhost:8080/login.html");
     }
 });
 
@@ -101,6 +100,7 @@ function allFieldsHaveSuccess(inputs) {
     }
     return true;
 }
+
 function sendPostRequest(newUser) {
     let serverUser = {
         login: newUser.username,
@@ -115,9 +115,9 @@ function sendPostRequest(newUser) {
     sendRequest('POST', 'json', 'http://localhost:8080/users', serverUser)
                 .then(d => {
                     console.log(d);
-                    window.location.replace("http://localhost:8080");
+                    window.location.replace("http://localhost:8080/login.html");
                 })
-                .catch(e => console.log(e));
+                .catch(response => console.log(response));
 }
 
 function sendRequest(method, responseType, url, body = null) {
@@ -129,7 +129,7 @@ function sendRequest(method, responseType, url, body = null) {
         xhr.onload = () => {
             let json = xhr.response;
             if (xhr.status >= 400) {
-                reject(xhr.response);
+                reject(json);
             } else {
                 resolve(json);
             }
