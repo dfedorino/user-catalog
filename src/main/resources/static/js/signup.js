@@ -114,10 +114,12 @@ function sendPostRequest(newUser) {
     }
     sendRequest('POST', 'json', 'http://localhost:8080/users', serverUser)
                 .then(d => {
-                    console.log(d);
                     window.location.replace("http://localhost:8080/login.html");
                 })
-                .catch(response => console.log(response));
+                .catch(response => {
+                    addClassAndMessage(username, "form-control error", response);
+                    addClassAndMessage(email, "form-control error", response);
+                });
 }
 
 function sendRequest(method, responseType, url, body = null) {
