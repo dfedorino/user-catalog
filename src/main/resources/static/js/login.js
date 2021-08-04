@@ -53,14 +53,14 @@ function sendPostRequest(newUser) {
     }
     sendRequest('POST', 'json', 'http://localhost:8080/login', loginAndPassword)
                 .then(d => {
-                    console.log(d);
                     localStorage.setItem('lgn', loginAndPassword.login);
                     localStorage.setItem('localhost_jwt', d.access_token);
                     window.location.replace("http://localhost:8080");
                 })
                 .catch(e => {
-                    console.log(e);
-                    addClassAndMessage(loginbtn, 'form-control error', 'Login failed');
+                    addClassAndMessage(username, 'form-control error', '');
+                    addClassAndMessage(password, 'form-control error', '');
+                    addClassAndMessage(loginbtn, 'form-control error', e);
                 });
 }
 
