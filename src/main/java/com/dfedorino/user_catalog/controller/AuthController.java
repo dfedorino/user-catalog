@@ -2,6 +2,7 @@ package com.dfedorino.user_catalog.controller;
 
 import com.dfedorino.user_catalog.repository.User;
 import com.dfedorino.user_catalog.repository.UserRepository;
+import com.dfedorino.user_catalog.repository.exception.UserNotFoundException;
 import com.dfedorino.user_catalog.security.CustomPasswordEncoder;
 import com.dfedorino.user_catalog.service.SecurityService;
 import lombok.Data;
@@ -29,7 +30,7 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestBody LoginPassword loginPassword) {
         User user = userRepository.findByLogin(loginPassword.getLogin());
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            throw new UserNotFoundException();
         }
         String rawPassword = loginPassword.getPassword();
         String salt = user.getSalt();

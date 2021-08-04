@@ -117,8 +117,14 @@ function sendPostRequest(newUser) {
                     window.location.replace("http://localhost:8080/login.html");
                 })
                 .catch(response => {
-                    addClassAndMessage(username, "form-control error", response);
-                    addClassAndMessage(email, "form-control error", response);
+                    let message = JSON.stringify(response);
+                    if (message.includes("login")) {
+                        addClassAndMessage(username, "form-control error", response);
+                    } else if (message.includes("email")) {
+                        addClassAndMessage(email, "form-control error", response);
+                    } else {
+                        alert(response);
+                    }
                 });
 }
 

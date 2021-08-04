@@ -28,37 +28,17 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-//        try {
-//            Map<String, Claim> claims;
-//            if (!hasJwtToken(request) || (claims = verifyTokenAndGetClaims(request)) == null) {
-//                SecurityContextHolder.clearContext();
-//            } else {
-//                String username = claims.get("sub").asString();
-//                // throws exception if doesn't exist
-//                boolean isExistingUser = userService.getUserByLogin(username) != null;
-//                setUpSpringAuthentication(claims);
-//            }
-//            chain.doFilter(request, response);
-//        } catch (JWTVerificationException | UserNotFoundException e) {
-//            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//            response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
-//        }
-
         if (hasJwtToken(request)) {
             try {
-                System.out.println(">> jwt found, verify token");
                 Map<String, Claim> claims = verifyToken(request);
                 if (claims == null) {
                     SecurityContextHolder.clearContext();
-                    System.out.println(">> failed to read claims");
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 } else {
-                    System.out.println(">> token verified, set up authentication");
                     setUpSpringAuthentication(claims);
                     chain.doFilter(request, response);
                 }
             } catch (JWTVerificationException e) {
-                System.out.println(">> failed to verify token");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             }
         } else {

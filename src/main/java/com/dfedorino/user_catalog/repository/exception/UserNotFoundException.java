@@ -1,11 +1,7 @@
 package com.dfedorino.user_catalog.repository.exception;
 
-public class UserNotFoundException extends RuntimeException{
-    public UserNotFoundException(Long id) {
-        super("Could not find user " + id);
-    }
-
-    public UserNotFoundException(String login) {
-        super("Could not find user " + login);
+public class UserNotFoundException extends UserException {
+    public UserNotFoundException() {
+        super("User not found");
     }
 }
