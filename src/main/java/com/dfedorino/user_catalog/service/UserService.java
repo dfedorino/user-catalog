@@ -6,8 +6,7 @@ import com.dfedorino.user_catalog.repository.Contact;
 import com.dfedorino.user_catalog.repository.User;
 import com.dfedorino.user_catalog.repository.UserDetailsImpl;
 import com.dfedorino.user_catalog.repository.UserRepository;
-import com.dfedorino.user_catalog.repository.exception.UserAlreadyExistsException;
-import com.dfedorino.user_catalog.repository.exception.UserNotFoundException;
+import com.dfedorino.user_catalog.repository.exception.UserException;
 import com.dfedorino.user_catalog.security.CustomPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,11 +33,13 @@ public class UserService implements UserDetailsService {
     public ClientDto createNewUser(User user) {
         String username = user.getLogin();
         String email = user.getEmail();
-        User userWithSameLogin = repository.findByLogin(username);
-        User userWithSameEmail = repository.findByEmail(email);
-        boolean userAlreadyExists = userWithSameLogin != null || userWithSameEmail != null;
-        if (userAlreadyExists) {
-            throw new UserAlreadyExistsException();
+        boolean userWithSameLoginExists = repository.findByLogin(username) != null;
+        if (userWithSameLoginExists) {
+            throw new UserException("User with same login already exists");
+        }
+        boolean userWithSameEmailExists = repository.findByEmail(email) != null;
+        if (userWithSameEmailExists) {
+            throw new UserException("User with same email already exists");
         } else {
             User saved = repository.save(createUserWithHashedPassword(user));
             return new ClientDtoImpl(saved);
@@ -62,7 +63,7 @@ public class UserService implements UserDetailsService {
     public ClientDto getUserByLogin(String login) {
         User found = repository.findByLogin(login);
         if (found == null) {
-            throw new UserNotFoundException(login);
+            throw new UserException("User with such login is not found");
         }
         return new ClientDtoImpl(found);
     }
