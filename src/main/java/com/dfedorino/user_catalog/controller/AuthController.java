@@ -3,6 +3,7 @@ package com.dfedorino.user_catalog.controller;
 import com.dfedorino.user_catalog.repository.User;
 import com.dfedorino.user_catalog.repository.UserRepository;
 import com.dfedorino.user_catalog.repository.exception.UserNotFoundException;
+import com.dfedorino.user_catalog.repository.exception.WrongPasswordException;
 import com.dfedorino.user_catalog.security.CustomPasswordEncoder;
 import com.dfedorino.user_catalog.service.SecurityService;
 import lombok.Data;
@@ -49,7 +50,7 @@ public class AuthController {
                             "\"token_type\":" + "\"Bearer\"" +
                             "}");
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new WrongPasswordException("Wrong password");
         }
     }
 
