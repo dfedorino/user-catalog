@@ -13,3 +13,9 @@ target/
 ### H2DB ###
 *.mv.db
 *.trace.db
+
+### Log4j2 ###
+logs
+
+### VS Code ###
+**/src/main/**/resources/static/.vscode/
